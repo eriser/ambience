@@ -3,6 +3,7 @@ project (ambience)
 
 # set (GoogletestBaseDir "test/googletest")
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -g")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g")
 
 #########
@@ -17,11 +18,19 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g")
 include_directories (
     src/util
     src/wav
+    src/synth
     )
 
+add_subdirectory( src/synth )
+add_subdirectory( src/wav )
+
 add_executable (bin/ambience
-    src/wav/Codec.cc
     src/frontend/Frontend.cc
+    )
+
+target_link_libraries( bin/ambience 
+    synth 
+    wav 
     )
 
 #########

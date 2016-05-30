@@ -33,6 +33,17 @@ static
 void
 streamWrite (
       std::ofstream &   outputFile,
+      int16_t          data
+      )
+{
+   outputFile.write( (const char *) &data, sizeof( data ) );
+}
+
+inline
+static
+void
+streamWrite (
+      std::ofstream &   outputFile,
       uint32_t          data
       )
 {
@@ -111,8 +122,8 @@ writeWav (
       {
          for ( unsigned channel = 0; channel < numChannels; channel++ )
          {
-            int16_t data = (int16_t) interleavedData[ sample + channel ] * multiplier;
-            streamWrite( outputFile, data );
+            int16_t audiodata = (int16_t) (interleavedData[ sample + channel ] * multiplier);
+            streamWrite( outputFile, (int16_t) audiodata );
          }
       }
 

@@ -2,6 +2,7 @@
 # General #
 ###########
 *.o
+*.a
 .cproject
 .project
 
