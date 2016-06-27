@@ -15,6 +15,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g")
 ###############
 # Application #
 ###############
+
+file( MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin" )
+
 include_directories (
     src/util
     src/wav
