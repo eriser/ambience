@@ -22,6 +22,7 @@ include_directories (
     src/util
     src/wav
     src/synth
+    src/core
     )
 
 add_subdirectory( src/synth )
