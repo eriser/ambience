@@ -39,7 +39,7 @@ main()
 #if 1
     
 	unsigned populationSize = 10;
-	unsigned sliceLength = 64;
+	unsigned sliceLength = 128;
 	unsigned numberOfSlices = 32;
 	unsigned individualSize = sliceLength * numberOfSlices;
 	bool verbose = true;
@@ -60,7 +60,7 @@ main()
     std::cout << "Fitness:" << std::endl;
     std::cout << gar.evaluateIndividual( best ) << std::endl;
 
-    gar.run(8000, verbose); 
+    gar.run(8000, 0.999, verbose); 
 
     std::cout << "After run" << std::endl;
     // gar.printPopulation();

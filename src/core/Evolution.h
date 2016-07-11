@@ -18,10 +18,12 @@ public:
     {}
     
     void
-    run( int generations, bool verbose )
+    run( int generations, float fitnessThreshold, bool verbose )
     {
         for ( int i = 0; i < generations; i++ )
         {
+			float bestFitness = evaluateIndividual(getBestIndividual());
+
 			if (verbose)
 			{
 				int stringWidth = (int)log10(generations) + 1;
@@ -29,7 +31,12 @@ public:
 				ss << std::setw(stringWidth) << std::setfill(' ') << i + 1;
 				std::string index = ss.str();
 
-				std::string output = "Iteration " + index + " / " + std::to_string(generations);
+				ss.str("");
+				ss.clear();
+				ss << std::fixed << std::setprecision(3) << bestFitness;
+				std::string fitnessString = ss.str();
+
+				std::string output = "Iteration " + index + " / " + std::to_string(generations) + " (max fitness = " + fitnessString + ")";
 				if (i > 0)
 				{
 					for (int i = 0; i < output.size(); i++)
@@ -41,6 +48,16 @@ public:
 				
 				printf("%s", output);
 				std::cout.flush();
+			}
+
+			if (bestFitness >= fitnessThreshold)
+			{
+				if (verbose)
+				{
+					std::cout << std::endl;
+					std::cout << "Max fitness exceeded threshold after " << i << " iterations." << std::endl;
+				}
+				return;
 			}
 
             Population newPopulation;
