@@ -183,7 +183,7 @@ public:
     evaluate( std::vector< Evaluator * > evaluators )
     {
         float fitness = 0;
-        for ( int i = 0; i < evaluators.size(); i++ )
+        for ( unsigned i = 0; i < evaluators.size(); i++ )
         {
             fitness += evaluators[i]->evaluate( *this );
         }
@@ -291,7 +291,7 @@ public:
 
         for ( int i = 0; i < size(); i++ )
         {
-            int challengerFitness = individuals_[i].evaluate( evaluators );
+            float challengerFitness = individuals_[i].evaluate( evaluators );
             if ( challengerFitness > bestFitness )
             {
                 bestIndividualIdx = i;
