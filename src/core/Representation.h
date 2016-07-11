@@ -190,6 +190,40 @@ public:
         return fitness;
     }
 
+	std::vector< Chromosome >
+	slice(unsigned index, unsigned sliceLength)
+	{
+		return std::vector< Chromosome > (
+			chromosomes_.begin() +  index      * sliceLength,
+			chromosomes_.begin() + (index + 1) * sliceLength);
+	}
+
+	unsigned
+	numberOfSlices(unsigned sliceLength) const
+	{
+		return size() / sliceLength;
+	}
+
+	Chromosome
+	operator()( unsigned slice, unsigned note, unsigned sliceLength ) const
+	{
+		return chromosomes_[slice * sliceLength + note];
+	}
+
+	unsigned
+	count(Note note, unsigned slice, unsigned sliceLength) const
+	{
+		unsigned cnt = 0;
+		for (unsigned i = 0; i < sliceLength; i++)
+		{
+			if (operator()(slice, i, sliceLength).note() == note)
+			{
+				cnt++;
+			}
+		}
+		return cnt;
+	}
+
     void
     print()
     {
@@ -199,6 +233,19 @@ public:
         }
         std::cout << std::endl;
     }
+
+	void
+	print(unsigned sliceLength)
+	{
+		for (unsigned slice = 0; slice < numberOfSlices(sliceLength); slice++)
+		{
+			for (unsigned note = 0; note < sliceLength; note++)
+			{
+				operator()(slice, note, sliceLength).print();
+			}
+			std::cout << std::endl;
+		}
+	}
 
 private:
     std::vector< Chromosome > chromosomes_;

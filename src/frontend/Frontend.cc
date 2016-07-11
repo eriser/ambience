@@ -37,25 +37,35 @@ main()
 #endif
 
 #if 1
-    ambience::RestEvaluator restEvaluator;
-    ambience::CEvaluator cEvaluator;
-    GeneticAlgorithmRunner gar( 20, 20 );
+    
+	unsigned populationSize = 20;
+	unsigned sliceLength = 10;
+	unsigned numberOfSlices = 5;
+	unsigned individualSize = sliceLength * numberOfSlices;
+    GeneticAlgorithmRunner gar( 20, individualSize );
+#if 0
+	ambience::RestEvaluator restEvaluator;
+	ambience::CEvaluator cEvaluator;
     gar.registerEvaluator( restEvaluator );
     gar.registerEvaluator( cEvaluator );
+#endif
+	ambience::SingleNoteEvaluator singleNoteEvaluator(sliceLength);
+	gar.registerEvaluator(singleNoteEvaluator);
     gar.printPopulation();
 
     std::cout << "Best Ind:" << std::endl;
     Individual best = gar.getBestIndividual();
-    best.print();
+    best.print(sliceLength);
     std::cout << "Fitness:" << std::endl;
     std::cout << gar.evaluateIndividual( best ) << std::endl;
 
     gar.run(30000); 
+
     std::cout << "After run" << std::endl;
     gar.printPopulation();
     std::cout << "Best Ind:" << std::endl;
     best = gar.getBestIndividual();
-    best.print();
+    best.print(sliceLength);
     std::cout << "Fitness:" << std::endl;
     std::cout << gar.evaluateIndividual( best ) << std::endl;
 #endif
