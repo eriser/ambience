@@ -3,8 +3,10 @@ project (ambience)
 
 # set (GoogletestBaseDir "test/googletest")
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -g")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g")
+IF( UNIX )
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -g")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g")
+ENDIF()
 
 #########
 # GTest #
@@ -16,7 +18,19 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g")
 # Application #
 ###############
 
-file( MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin" )
+# file( MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin" )
+
+# set(CORE_SOURCE)
+
+set( CORE_HEADERS
+	 src/core/Evolution.h
+	 src/core/Representation.h
+	 src/core/Rules.h
+	)
+	
+set( FRONTEND_SOURCES
+	 src/frontend/Frontend.cc
+	)
 
 include_directories (
     src/util
@@ -24,15 +38,16 @@ include_directories (
     src/synth
     src/core
     )
-
+	
 add_subdirectory( src/synth )
 add_subdirectory( src/wav )
 
-add_executable (bin/ambience
-    src/frontend/Frontend.cc
+add_executable ( ambience
+    ${CORE_HEADERS}
+	${FRONTEND_SOURCES}
     )
 
-target_link_libraries( bin/ambience 
+target_link_libraries( ambience 
     synth 
     wav 
     )
