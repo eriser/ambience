@@ -23,23 +23,6 @@ public:
     }
 };
 
-class CEvaluator : public ambience::Evaluator
-{
-public:
-    virtual float evaluate( const ambience::Individual & individual )
-    {
-        int numberOfRests = 0;
-        for ( int i = 0; i < individual.size(); i++ )
-        {
-            if ( individual[i].note() == ambience::Note::C )
-            {
-                numberOfRests++;
-            }
-        }
-        return (float) numberOfRests / (float) individual.size();
-    }
-};
-
 class SingleNoteEvaluator : public ambience::Evaluator
 {
 public:
@@ -54,9 +37,7 @@ public:
 		unsigned numberOfSlices = individual.numberOfSlices(sliceLength_);
 		for (unsigned slice = 0; slice < numberOfSlices; slice++)
 		{
-			unsigned rests = individual.count(ambience::Note::REST, slice, sliceLength_);
-			unsigned holds = individual.count(ambience::Note::HOLD, slice, sliceLength_);
-			unsigned numberOfRealNotes = sliceLength_ - (rests + holds);
+			unsigned numberOfRealNotes = individual.count(ambience::Note::ON, slice, sliceLength_);
 
 			if (numberOfRealNotes <= 1)
 			{

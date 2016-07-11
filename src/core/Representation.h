@@ -12,17 +12,7 @@ namespace ambience
 
 enum class Note
 {
-    C,
-    Db,
-    D,
-    Eb,
-    E,
-    F,
-    Gb,
-    G,
-    Ab,
-    A,
-    B,
+    ON,
     REST,
     HOLD,
     NUMBER_OF_NOTES
@@ -31,17 +21,7 @@ enum class Note
 
 const std::map< Note, std::string > 
 noteToString = {
-    { Note::C,    "C" },
-    { Note::Db,   "Db" },
-    { Note::D,    "D" },
-    { Note::Eb,   "Eb" },
-    { Note::E,    "E" },
-    { Note::F,    "F" },
-    { Note::Gb,   "Gb" },
-    { Note::G,    "G" },
-    { Note::Ab,   "Ab" },
-    { Note::A,    "A" },
-    { Note::B,    "B" },
+    { Note::ON,   "ON" },
     { Note::REST, "REST" },
     { Note::HOLD, "HOLD" }
 };
