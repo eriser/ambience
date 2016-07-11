@@ -1,6 +1,9 @@
 #ifndef EVOLUTION_H
 #define EVOLUTION_H
 
+#include <sstream>
+#include <iomanip>
+
 #include "Representation.h"
 
 namespace ambience
@@ -15,10 +18,31 @@ public:
     {}
     
     void
-    run( int generations )
+    run( int generations, bool verbose )
     {
         for ( int i = 0; i < generations; i++ )
         {
+			if (verbose)
+			{
+				int stringWidth = (int)log10(generations) + 1;
+				std::stringstream ss;
+				ss << std::setw(stringWidth) << std::setfill(' ') << i + 1;
+				std::string index = ss.str();
+
+				std::string output = "Iteration " + index + " / " + std::to_string(generations);
+				if (i > 0)
+				{
+					for (int i = 0; i < output.size(); i++)
+					{
+						printf("\b");
+					}
+					std::cout.flush();
+				}
+				
+				printf("%s", output);
+				std::cout.flush();
+			}
+
             Population newPopulation;
             
             for ( int i = 0; i < population_.size() / 2; i++ )
@@ -37,6 +61,11 @@ public:
             newPopulation.mutate( 1.0 );
             population_ = newPopulation;
         }
+
+		if (verbose)
+		{
+			std::cout << std::endl;
+		}
     }
 
     void
