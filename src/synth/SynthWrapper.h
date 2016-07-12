@@ -15,6 +15,9 @@ public:
    real
    getSample();
 
+   int
+   getSampleRate();
+
    void
    noteOn( int midiNote );
 

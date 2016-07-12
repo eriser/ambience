@@ -18,6 +18,12 @@ SynthWrapper::getSample()
 }
 
 
+int
+SynthWrapper::getSampleRate()
+{
+	return parameters_.samplerate;
+}
+
 void
 SynthWrapper::noteOn( int midiNote )
 {
