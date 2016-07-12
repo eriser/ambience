@@ -3,6 +3,8 @@
 
 #include "Representation.h"
 
+#include <set>
+
 namespace ambience
 {
 
@@ -77,6 +79,41 @@ private:
 
 	unsigned desiredNumberOfNotes_;
 
+};
+
+class NotesInSetEvaluator : public ambience::Evaluator
+{
+public:
+
+	NotesInSetEvaluator(std::set<ambience::NoteValue> & desiredNotes, unsigned sliceLength) :
+		desiredNotes_(desiredNotes), sliceLength_(sliceLength)
+	{}
+
+	virtual float evaluate(const ambience::Individual & individual)
+	{
+		unsigned numberOfNotes = 0;
+		unsigned numberOfNotesInSet    = 0;
+		for (unsigned i = 0; i < individual.size(); i++)
+		{ 
+			if (individual[i].note() == ambience::Note::ON)
+			{
+				unsigned midiNote = i % sliceLength_;
+				const bool noteInSet = desiredNotes_.find(midiToNoteValue(midiNote)) != desiredNotes_.end();
+				if (noteInSet)
+				{
+					numberOfNotesInSet++;
+				}
+				numberOfNotes++;
+			}
+		}
+		
+		return (float)numberOfNotesInSet / (float)numberOfNotes;
+	}
+
+private:
+
+	std::set<ambience::NoteValue> desiredNotes_;
+	unsigned sliceLength_;
 };
 
 }

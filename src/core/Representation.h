@@ -18,6 +18,22 @@ enum class Note
     NUMBER_OF_NOTES
 };
 
+enum class NoteValue
+{
+	C,
+	Db,
+	D,
+	Eb,
+	E,
+	F,
+	Gb,
+	G,
+	Ab,
+	A,
+	Bb,
+	B,
+	NUMBER_OF_NOTE_VALUES
+};
 
 const std::map< Note, std::string > 
 noteToString = {
@@ -26,6 +42,11 @@ noteToString = {
     { Note::HOLD, "HOLD" }
 };
 
+NoteValue
+midiToNoteValue(unsigned midiNote)
+{
+	return static_cast<NoteValue>(midiNote % static_cast<unsigned>(NoteValue::NUMBER_OF_NOTE_VALUES));
+}
 
 class Individual;
 class Chromosome;

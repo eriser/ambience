@@ -79,6 +79,16 @@ main()
 
     using namespace ambience;
 
+	std::set<ambience::NoteValue> CMajor = {
+		ambience::NoteValue::C,
+		ambience::NoteValue::D,
+		ambience::NoteValue::E,
+		ambience::NoteValue::F,
+		ambience::NoteValue::G,
+		ambience::NoteValue::A,
+		ambience::NoteValue::B,
+	};
+
 #if 0
     Chromosome c;
     c.print();
@@ -101,16 +111,20 @@ main()
 #if 1
     
 	unsigned populationSize = 10;
-	unsigned sliceLength = 16;
+	unsigned sliceLength = 128;
 	unsigned numberOfSlices = 32;
 	unsigned individualSize = sliceLength * numberOfSlices;
 	bool verbose = true;
     GeneticAlgorithmRunner gar( 20, individualSize );
 
+#if 1
 	ambience::SingleNoteEvaluator singleNoteEvaluator(sliceLength);
 	gar.registerEvaluator(singleNoteEvaluator);
 	ambience::NumberOfNotesEvaluator numberOfNotesEvaluator(numberOfSlices / 4);
 	gar.registerEvaluator(numberOfNotesEvaluator);
+#endif
+	ambience::NotesInSetEvaluator notesInSetEvaluator(CMajor, sliceLength);
+	gar.registerEvaluator(notesInSetEvaluator);
 
     // gar.printPopulation();
     std::cout << "Best Ind:" << std::endl;
@@ -129,7 +143,7 @@ main()
     std::cout << "Fitness:" << std::endl;
     std::cout << gar.evaluateIndividual( best ) << std::endl;
 
-#if 0
+#if 1
 	int samplerate = 44100;
 	SynthWrapper synth(samplerate);
 	individualToAudio("tmp.wav", best, synth, 120, 16, numberOfSlices, sliceLength);
