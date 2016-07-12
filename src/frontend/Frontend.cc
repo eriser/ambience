@@ -101,7 +101,7 @@ main()
 #if 1
     
 	unsigned populationSize = 10;
-	unsigned sliceLength = 128;
+	unsigned sliceLength = 16;
 	unsigned numberOfSlices = 32;
 	unsigned individualSize = sliceLength * numberOfSlices;
 	bool verbose = true;
@@ -109,6 +109,8 @@ main()
 
 	ambience::SingleNoteEvaluator singleNoteEvaluator(sliceLength);
 	gar.registerEvaluator(singleNoteEvaluator);
+	ambience::NumberOfNotesEvaluator numberOfNotesEvaluator(numberOfSlices / 4);
+	gar.registerEvaluator(numberOfNotesEvaluator);
 
     // gar.printPopulation();
     std::cout << "Best Ind:" << std::endl;
@@ -117,7 +119,7 @@ main()
     std::cout << "Fitness:" << std::endl;
     std::cout << gar.evaluateIndividual( best ) << std::endl;
 
-    gar.run(8000, 0.999, verbose); 
+    gar.run(8000, 0.999999f, verbose); 
 
     std::cout << "After run" << std::endl;
     // gar.printPopulation();
@@ -127,9 +129,11 @@ main()
     std::cout << "Fitness:" << std::endl;
     std::cout << gar.evaluateIndividual( best ) << std::endl;
 
+#if 0
 	int samplerate = 44100;
 	SynthWrapper synth(samplerate);
 	individualToAudio("tmp.wav", best, synth, 120, 16, numberOfSlices, sliceLength);
+#endif
 #endif
     
 

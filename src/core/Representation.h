@@ -130,7 +130,7 @@ public:
         return chromosomes_[i];
     }
 
-    int
+    unsigned
     size() const
     {
         return chromosomes_.size();
@@ -145,7 +145,7 @@ public:
 
         Individual tmp( *this );
 
-        for (int i = middle; i < size(); i++)
+        for (unsigned i = middle; i < size(); i++)
         {
             chromosomes_[i] = other.chromosomes_[i];
             other.chromosomes_[i] = tmp.chromosomes_[i];
@@ -167,7 +167,7 @@ public:
         {
             fitness += evaluators[i]->evaluate( *this );
         }
-        return fitness;
+        return fitness / (float) evaluators.size();
     }
 
 	std::vector< Chromosome >
@@ -188,6 +188,20 @@ public:
 	operator()( unsigned slice, unsigned note, unsigned sliceLength ) const
 	{
 		return chromosomes_[slice * sliceLength + note];
+	}
+
+	unsigned
+	count(Note note) const
+	{
+		unsigned cnt = 0;
+		for (unsigned i = 0; i < size(); i++)
+		{
+			if (operator[](i).note() == note)
+			{
+				cnt++;
+			}
+		}
+		return cnt;
 	}
 
 	unsigned

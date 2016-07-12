@@ -39,14 +39,14 @@ public:
 				std::string output = "Iteration " + index + " / " + std::to_string(generations) + " (max fitness = " + fitnessString + ")";
 				if (i > 0)
 				{
-					for (int i = 0; i < output.size(); i++)
+					for (unsigned i = 0; i < output.size(); i++)
 					{
 						printf("\b");
 					}
 					std::cout.flush();
 				}
 				
-				printf("%s", output);
+				printf("%s", output.c_str());
 				std::cout.flush();
 			}
 
