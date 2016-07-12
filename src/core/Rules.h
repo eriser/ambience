@@ -12,7 +12,7 @@ public:
     virtual float evaluate( const ambience::Individual & individual )
     {
         int numberOfRests = 0;
-        for ( int i = 0; i < individual.size(); i++ )
+        for ( unsigned i = 0; i < individual.size(); i++ )
         {
             if ( individual[i].note() == ambience::Note::REST )
             {
@@ -53,7 +53,30 @@ public:
 	}
 
 private:
+
 	unsigned sliceLength_;
+
+};
+
+class NumberOfNotesEvaluator : public ambience::Evaluator
+{
+public:
+
+	NumberOfNotesEvaluator(unsigned desiredNumberOfNotes) :
+		desiredNumberOfNotes_(desiredNumberOfNotes)
+	{}
+
+	virtual float evaluate(const ambience::Individual & individual)
+	{
+		unsigned actualNumberOfNotes = individual.count(ambience::Note::ON);
+		float fitness = 1.0f - fabs((float)((float)desiredNumberOfNotes_ - (float)actualNumberOfNotes)) / (float)individual.size();
+		return fitness;
+	}
+
+private:
+
+	unsigned desiredNumberOfNotes_;
+
 };
 
 }
