@@ -71,6 +71,8 @@ individualToAudio(
 		samplerate,
 		16
 		);
+
+	free(audio);
 }
 
 int
