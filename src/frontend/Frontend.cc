@@ -5,6 +5,8 @@
 #include "Evolution.h"
 #include "Rules.h"
 
+#include <cstdlib>
+
 extern "C"
 {
 #include "synth.h"
@@ -12,11 +14,71 @@ extern "C"
 
 #include <string.h>
 
+void
+individualToAudio(
+	const std::string &    outputFile,
+	ambience::Individual & individual,
+	SynthWrapper &         synth,
+	float                  bpm,
+	unsigned               slicesPerWholeNote,
+	unsigned               numberOfSlices,
+	unsigned               sliceLength
+	)
+{
+	unsigned numberOfQuarters  = numberOfSlices / (slicesPerWholeNote / 4);
+	float    quartersPerSecond = bpm / 60.0f;
+	unsigned samplerate        = (unsigned) synth.getSampleRate();
+
+	unsigned long numberOfSamples = (unsigned long) (samplerate * (1.0f / quartersPerSecond) * numberOfQuarters);
+	unsigned long numberOfSamplesPerSlice = numberOfSamples / numberOfSlices;
+
+	real * audio = (real *) malloc(numberOfSamples * sizeof(real));
+	memset(audio, 0, numberOfSamples * sizeof(real));
+
+	unsigned long currentSample = 0;
+
+	for (unsigned slice = 0; slice < numberOfSlices; slice++)
+	{
+		for (unsigned note = 0; note < sliceLength; note++)
+		{
+			ambience::Note currentNote = individual(slice, note, sliceLength).note();
+			switch (currentNote)
+			{
+			case ambience::Note::ON:
+				synth.noteOn(note);
+				break;
+			case ambience::Note::REST:
+				synth.noteOff(note);
+				break;
+			default:
+				break;
+			}
+		}
+
+		for (unsigned long sample = 0; sample < numberOfSamplesPerSlice; sample++)
+		{
+			audio[currentSample + sample] = synth.getSample();
+		}
+
+		currentSample += numberOfSamplesPerSlice;
+	}
+
+	writeWav(
+		"test.wav",
+		&audio[0],
+		numberOfSamples,
+		1,
+		samplerate,
+		16
+		);
+}
+
 int
 main()
 {
 
     using namespace ambience;
+
 #if 0
     Chromosome c;
     c.print();
@@ -44,12 +106,7 @@ main()
 	unsigned individualSize = sliceLength * numberOfSlices;
 	bool verbose = true;
     GeneticAlgorithmRunner gar( 20, individualSize );
-#if 0
-	ambience::RestEvaluator restEvaluator;
-	ambience::CEvaluator cEvaluator;
-    gar.registerEvaluator( restEvaluator );
-    gar.registerEvaluator( cEvaluator );
-#endif
+
 	ambience::SingleNoteEvaluator singleNoteEvaluator(sliceLength);
 	gar.registerEvaluator(singleNoteEvaluator);
 
@@ -69,6 +126,10 @@ main()
     best.print(sliceLength);
     std::cout << "Fitness:" << std::endl;
     std::cout << gar.evaluateIndividual( best ) << std::endl;
+
+	int samplerate = 44100;
+	SynthWrapper synth(samplerate);
+	individualToAudio("tmp.wav", best, synth, 120, 16, numberOfSlices, sliceLength);
 #endif
     
 
