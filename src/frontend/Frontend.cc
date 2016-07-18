@@ -64,7 +64,7 @@ individualToAudio(
 	}
 
 	writeWav(
-		"test.wav",
+		outputFile,
 		&audio[0],
 		numberOfSamples,
 		1,
@@ -122,28 +122,30 @@ main()
 #if 1
 	ambience::SingleNoteEvaluator singleNoteEvaluator(sliceLength);
 	gar.registerEvaluator(singleNoteEvaluator);
-	ambience::NumberOfNotesEvaluator numberOfNotesEvaluator(numberOfSlices / 4);
+	ambience::NumberOfNotesEvaluator numberOfNotesEvaluator(numberOfSlices / 8);
 	gar.registerEvaluator(numberOfNotesEvaluator);
-#endif
 	ambience::NotesInSetEvaluator notesInSetEvaluator(CMajor, sliceLength);
 	gar.registerEvaluator(notesInSetEvaluator);
+#endif
+	ambience::NotesInRangeEvaluator notesInRangeEvaluator(40, 80, sliceLength);
+	gar.registerEvaluator(notesInRangeEvaluator);
 
     // gar.printPopulation();
-    std::cout << "Best Ind:" << std::endl;
+    // std::cout << "Best Ind:" << std::endl;
     Individual best = gar.getBestIndividual();
-    best.print(sliceLength);
-    std::cout << "Fitness:" << std::endl;
-    std::cout << gar.evaluateIndividual( best ) << std::endl;
+    // best.print(sliceLength);
+    // std::cout << "Fitness:" << std::endl;
+    // std::cout << gar.evaluateIndividual( best ) << std::endl;
 
     gar.run(8000, 0.999999f, verbose); 
 
-    std::cout << "After run" << std::endl;
+    // std::cout << "After run" << std::endl;
     // gar.printPopulation();
-    std::cout << "Best Ind:" << std::endl;
+    // std::cout << "Best Ind:" << std::endl;
     best = gar.getBestIndividual();
-    best.print(sliceLength);
-    std::cout << "Fitness:" << std::endl;
-    std::cout << gar.evaluateIndividual( best ) << std::endl;
+    // best.print(sliceLength);
+    // std::cout << "Fitness:" << std::endl;
+    // std::cout << gar.evaluateIndividual( best ) << std::endl;
 
 #if 1
 	int samplerate = 44100;

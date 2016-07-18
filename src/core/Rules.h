@@ -116,6 +116,49 @@ private:
 	unsigned sliceLength_;
 };
 
+class NotesInRangeEvaluator : public ambience::Evaluator
+{
+public:
+
+    NotesInRangeEvaluator( unsigned minNote, unsigned maxNote, unsigned sliceLength ) :
+        minNote_( minNote ), maxNote_( maxNote ), sliceLength_( sliceLength )
+    {}
+
+    virtual float evaluate( const ambience::Individual & individual )
+    {
+       unsigned numSlotsInRange    = maxNote_ - minNote_ + 1;
+       unsigned numSlotsNotInRange = sliceLength_ - numSlotsInRange;
+
+       unsigned notesOutOfRange = 0;       
+
+       for ( unsigned slice = 0; slice < individual.numberOfSlices( sliceLength_ ); slice++ )
+       {
+          for ( unsigned note = 0; note < sliceLength_; note++ )
+          {
+             if ( note < minNote_ || note > maxNote_ )
+             {
+                if ( individual( slice, note, sliceLength_ ).note() == ambience::Note::ON )   
+                {
+                   notesOutOfRange++;
+                }
+             }  
+          }
+       }
+       
+       float avgNumNotesOutOfRange = (float) notesOutOfRange / (float) individual.numberOfSlices( sliceLength_ );
+       float fitness = 1.0f - avgNumNotesOutOfRange / (float) numSlotsNotInRange;
+        
+       return fitness;
+    }
+
+private:
+
+    unsigned minNote_;
+    unsigned maxNote_;
+    unsigned sliceLength_;
+
+};
+
 }
 
 #endif
