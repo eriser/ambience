@@ -181,7 +181,7 @@ public:
     }
 
     float 
-    evaluate( std::vector< Evaluator * > evaluators )
+    evaluate( std::vector< Evaluator * > evaluators ) const
     {
         float fitness = 0;
         for ( unsigned i = 0; i < evaluators.size(); i++ )

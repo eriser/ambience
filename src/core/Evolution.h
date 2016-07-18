@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <iomanip>
+#include <cmath>
 
 #include "Representation.h"
 
@@ -98,7 +99,7 @@ public:
     }
 
     float
-    evaluateIndividual( Individual & individual )
+    evaluateIndividual( const Individual & individual )
     {
         return individual.evaluate( evaluators_ ); 
     }
