@@ -3,15 +3,17 @@ project (ambience)
 
 # set (GoogletestBaseDir "test/googletest")
 
-IF( CMAKE_COMPILER_IS_GNUCXX  )
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -g")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g")
-ENDIF()
-
-IF( MSVC )
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -g")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /O2")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /O2")
-ENDIF()
+endif()
 
 #########
 # GTest #
