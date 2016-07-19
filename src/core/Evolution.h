@@ -66,7 +66,7 @@ public:
             for ( int i = 0; i < population_.size() / 2; i++ )
             {
                 // select parents from population
-                int tournamentSize = 6;
+                int tournamentSize = 10;
                 Individual parent1 = population_.select( tournamentSize, evaluators_ );
                 Individual parent2 = population_.select( tournamentSize, evaluators_ );
 

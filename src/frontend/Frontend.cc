@@ -112,7 +112,7 @@ main()
 
 #if 1
     
-	unsigned populationSize = 10;
+	unsigned populationSize = 20;
 	unsigned sliceLength = 128;
 	unsigned numberOfSlices = 32;
 	unsigned individualSize = sliceLength * numberOfSlices;
@@ -126,9 +126,11 @@ main()
 	gar.registerEvaluator(numberOfNotesEvaluator);
 	ambience::NotesInSetEvaluator notesInSetEvaluator(CMajor, sliceLength);
 	gar.registerEvaluator(notesInSetEvaluator);
-#endif
 	ambience::NotesInRangeEvaluator notesInRangeEvaluator(40, 80, sliceLength);
 	gar.registerEvaluator(notesInRangeEvaluator);
+	ambience::NoteTimeIntervalEvaluator notesInTimeIntervalEvaluator(6, 8, sliceLength);
+	gar.registerEvaluator(notesInTimeIntervalEvaluator);
+#endif
 
     // gar.printPopulation();
     // std::cout << "Best Ind:" << std::endl;

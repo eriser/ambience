@@ -8,6 +8,7 @@
 namespace ambience
 {
 
+// Best fitness for a large number of rests
 class RestEvaluator : public ambience::Evaluator
 {
 public:
@@ -160,6 +161,62 @@ private:
 
     unsigned minNote_;
     unsigned maxNote_;
+    unsigned sliceLength_;
+
+};
+
+// Best fitness if there are no notes in slices before and after a slice with notes
+// as specified by the parameters
+// interval == 0 means notes follow directly, 
+// interval == 1 means one slice of hold / rest
+// ...
+// The interval from start to first note does not count
+class NoteTimeIntervalEvaluator : public Evaluator
+{
+public:
+   NoteTimeIntervalEvaluator( unsigned minEmptySlices, unsigned maxEmptySlices, 
+                              unsigned sliceLength  ) :
+      minEmptySlices_( minEmptySlices ), maxEmptySlices_( maxEmptySlices ), 
+      sliceLength_( sliceLength )
+   {}
+
+   virtual float evaluate( const Individual & individual )
+   {
+      unsigned numberOfSlices = individual.numberOfSlices( sliceLength_ );
+      std::vector< unsigned > intervalLength;
+      bool firstNotePassed = false;
+      for (unsigned slice = 0; slice < numberOfSlices; slice++)
+      {
+         unsigned numberOfRealNotes = individual.count(ambience::Note::ON, slice, sliceLength_);
+         if ( numberOfRealNotes > 0 )
+         { 
+            intervalLength.push_back( 0 );
+            firstNotePassed = true;
+         }
+         else if ( numberOfRealNotes == 0 && firstNotePassed )
+         {
+            intervalLength.back()++;
+         }
+      }
+
+      float fitness = 0.0f;
+      for ( unsigned interval : intervalLength )
+      {
+         if ( interval < minEmptySlices_ || interval > maxEmptySlices_ )
+         {
+            fitness += 1.0f;
+         }
+      }
+
+      fitness = 1.0f - fitness / (float) intervalLength.size();
+      return fitness;
+
+   }
+
+private:
+
+    unsigned minEmptySlices_;
+    unsigned maxEmptySlices_;
     unsigned sliceLength_;
 
 };
