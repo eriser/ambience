@@ -25,6 +25,7 @@ public:
     }
 };
 
+// Best fitness if <= 1 notes per slice 
 class SingleNoteEvaluator : public ambience::Evaluator
 {
 public:
@@ -60,6 +61,8 @@ private:
 
 };
 
+// Best fitness if the overall number of notes in the individual
+// is near / equal the passed number of notes.
 class NumberOfNotesEvaluator : public ambience::Evaluator
 {
 public:
@@ -81,6 +84,7 @@ private:
 
 };
 
+// Best fitness if all notes in the individual are in the passed set
 class NotesInSetEvaluator : public ambience::Evaluator
 {
 public:
@@ -116,6 +120,7 @@ private:
 	unsigned sliceLength_;
 };
 
+// Best fitness if all notes are in the passed range
 class NotesInRangeEvaluator : public ambience::Evaluator
 {
 public:
