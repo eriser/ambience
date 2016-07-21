@@ -280,10 +280,6 @@ class Population
 public:
 
     Population() {}
-
-    Population( const Population & other ) :
-        individuals_( other.individuals_ )
-    {}
         
     Population( int populationSize, int individualSize )
     {
@@ -292,15 +288,6 @@ public:
             Individual individual( individualSize );
             individuals_.push_back( individual );
         }
-    }
-
-    Population & operator= ( const Population & other )
-    {
-        if ( this != &other )
-        {
-            individuals_ = other.individuals_;
-        }
-        return *this;
     }
 
     void
