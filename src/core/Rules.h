@@ -26,13 +26,40 @@ public:
     }
 };
 
+// Best fitness if hold to rest ratio fits the passed value
+// fitness = | ratio - (rests / (holds + rests)) |
+// => ratio = 0: full hold
+// => ratio = 1: full rest
+class HoldRestRatioEvaluator : public ambience::Evaluator
+{
+public:
+
+	HoldRestRatioEvaluator( float holdToRestRatio ) :
+		holdToRestRatio_( holdToRestRatio )
+	{}
+
+	virtual float evaluate(const ambience::Individual & individual)
+	{
+		unsigned numberOfRests = individual.count(ambience::Note::REST);
+		unsigned numberOfHolds = individual.count(ambience::Note::HOLD);
+
+		float restPercentage = (float)numberOfRests / (float)(numberOfRests + numberOfHolds);
+
+		return 1.0f - fabs(holdToRestRatio_ - restPercentage);
+	}
+
+private:
+
+	float holdToRestRatio_;
+};
+
 // Best fitness if <= 1 notes per slice 
 class SingleNoteEvaluator : public ambience::Evaluator
 {
 public:
 
-	SingleNoteEvaluator(unsigned sliceLength) :
-		sliceLength_(sliceLength)
+	SingleNoteEvaluator(unsigned sliceLength, float emptySliceFitness = 0.5f) :
+		sliceLength_(sliceLength), emptySliceFitness_( emptySliceFitness )
 	{}
 
 	virtual float evaluate(const ambience::Individual & individual)
@@ -43,9 +70,13 @@ public:
 		{
 			unsigned numberOfRealNotes = individual.count(ambience::Note::ON, slice, sliceLength_);
 
-			if (numberOfRealNotes <= 1)
+			if (numberOfRealNotes == 1)
 			{
 				fitness += 1.0;
+			}
+			else if (numberOfRealNotes == 0)
+			{
+				fitness += emptySliceFitness_;
 			}
 			else
 			{
@@ -59,6 +90,7 @@ public:
 private:
 
 	unsigned sliceLength_;
+	float emptySliceFitness_;
 
 };
 
@@ -132,29 +164,21 @@ public:
 
     virtual float evaluate( const ambience::Individual & individual )
     {
-       unsigned numSlotsInRange    = maxNote_ - minNote_ + 1;
-       unsigned numSlotsNotInRange = sliceLength_ - numSlotsInRange;
-
-       unsigned notesOutOfRange = 0;       
+	   unsigned notesInRange = 0;
+	   unsigned numberOfNotes = individual.count(ambience::Note::ON);
 
        for ( unsigned slice = 0; slice < individual.numberOfSlices( sliceLength_ ); slice++ )
        {
-          for ( unsigned note = 0; note < sliceLength_; note++ )
+          for ( unsigned note = minNote_; note <= maxNote_; note++ )
           {
-             if ( note < minNote_ || note > maxNote_ )
+             if ( individual( slice, note, sliceLength_ ).note() == ambience::Note::ON )   
              {
-                if ( individual( slice, note, sliceLength_ ).note() == ambience::Note::ON )   
-                {
-                   notesOutOfRange++;
-                }
-             }  
+                notesInRange++;
+             }
           }
        }
-       
-       float avgNumNotesOutOfRange = (float) notesOutOfRange / (float) individual.numberOfSlices( sliceLength_ );
-       float fitness = 1.0f - avgNumNotesOutOfRange / (float) numSlotsNotInRange;
         
-       return fitness;
+       return (float) notesInRange / (float) numberOfNotes;
     }
 
 private:
