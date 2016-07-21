@@ -31,9 +31,9 @@ void
 {
 	memset(filter->a_buffer, 0, sizeof(filter->a_buffer));
 
-	filter->cutoff = 0.5;
-	filter->resonance = 0.0;
-	filter->cutoff_mod = 0.0;
+	filter->cutoff = 0.1;
+	filter->resonance = 0.1;
+	filter->cutoff_mod = 0.1;
 
 	calculate_feedback_amount(filter);
 

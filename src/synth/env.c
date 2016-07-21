@@ -93,7 +93,7 @@ void
 {
 
 	adsr->a_stage_value[OFF]        = 0.0;
-	adsr->a_stage_value[ATTACK]     = 0.1;
+	adsr->a_stage_value[ATTACK]     = 1.5;
 	adsr->a_stage_value[DECAY]      = 0.5;
 	adsr->a_stage_value[SUSTAIN]    = 0.7;
 	adsr->a_stage_value[RELEASE]    = 2.0;
