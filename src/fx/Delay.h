@@ -2,9 +2,10 @@
 #define DELAY_H
 
 #include "Types.h"
+#include "Effect.h"
 #include <cstring>
 
-class Delay
+class Delay : public Effect
 {
 public:
     

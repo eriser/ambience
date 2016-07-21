@@ -4,6 +4,8 @@
 #include "Representation.h"
 #include "Evolution.h"
 #include "Rules.h"
+#include "Effect.h"
+#include "Delay.h"
 
 #include <cstdlib>
 
@@ -16,13 +18,14 @@ extern "C"
 
 void
 individualToAudio(
-	const std::string &    outputFile,
-	ambience::Individual & individual,
-	SynthWrapper &         synth,
-	float                  bpm,
-	unsigned               slicesPerWholeNote,
-	unsigned               numberOfSlices,
-	unsigned               sliceLength
+	const std::string &       outputFile,
+	ambience::Individual &	  individual,
+	SynthWrapper &            synth,
+	std::vector< Effect * > & fx,
+	float                     bpm,
+	unsigned                  slicesPerWholeNote,
+	unsigned                  numberOfSlices,
+	unsigned                  sliceLength
 	)
 {
 	unsigned numberOfQuarters  = numberOfSlices / (slicesPerWholeNote / 4);
@@ -57,7 +60,13 @@ individualToAudio(
 
 		for (unsigned long sample = 0; sample < numberOfSamplesPerSlice; sample++)
 		{
-			audio[currentSample + sample] = synth.getSample();
+			real audioSample = synth.getSample();
+			for (Effect * effect : fx)
+			{
+				audioSample = effect->getSample(audioSample);
+			}
+			audio[currentSample + sample] = audioSample;
+
 		}
 
 		currentSample += numberOfSamplesPerSlice;
@@ -79,6 +88,10 @@ int
 main()
 {
 
+#ifndef NDEBUG
+	std::cout << "--- Debug build ---" << std::endl;
+#endif
+
     using namespace ambience;
 
 	std::set<ambience::NoteValue> CMajor = {
@@ -89,6 +102,14 @@ main()
 		ambience::NoteValue::G,
 		ambience::NoteValue::A,
 		ambience::NoteValue::B,
+	};
+
+	std::set<ambience::NoteValue> CPentatonic = {
+		ambience::NoteValue::C,
+		ambience::NoteValue::D,
+		ambience::NoteValue::E,
+		ambience::NoteValue::G,
+		ambience::NoteValue::A,
 	};
 
 #if 0
@@ -112,25 +133,30 @@ main()
 
 #if 1
     
-	unsigned populationSize = 20;
+	unsigned populationSize = 30;
 	unsigned sliceLength = 128;
 	unsigned numberOfSlices = 32;
 	unsigned individualSize = sliceLength * numberOfSlices;
 	bool verbose = true;
-    GeneticAlgorithmRunner gar( 20, individualSize );
+    GeneticAlgorithmRunner gar( populationSize, individualSize );
 
-#if 1
+
+
+	ambience::NumberOfNotesEvaluator numberOfNotesEvaluator(1);
+	gar.registerEvaluator(numberOfNotesEvaluator);
 	ambience::SingleNoteEvaluator singleNoteEvaluator(sliceLength);
 	gar.registerEvaluator(singleNoteEvaluator);
-	ambience::NumberOfNotesEvaluator numberOfNotesEvaluator(numberOfSlices / 8);
-	gar.registerEvaluator(numberOfNotesEvaluator);
-	ambience::NotesInSetEvaluator notesInSetEvaluator(CMajor, sliceLength);
+	ambience::NotesInSetEvaluator notesInSetEvaluator(CPentatonic, sliceLength);
 	gar.registerEvaluator(notesInSetEvaluator);
-	ambience::NotesInRangeEvaluator notesInRangeEvaluator(40, 80, sliceLength);
+	ambience::NotesInRangeEvaluator notesInRangeEvaluator(60, 80, sliceLength);
 	gar.registerEvaluator(notesInRangeEvaluator);
+	ambience::HoldRestRatioEvaluator holdRestRatioEvaluator(0.3f);
+	gar.registerEvaluator(holdRestRatioEvaluator);
+#if 0
 	ambience::NoteTimeIntervalEvaluator notesInTimeIntervalEvaluator(6, 8, sliceLength);
 	gar.registerEvaluator(notesInTimeIntervalEvaluator);
 #endif
+
 
     // gar.printPopulation();
     // std::cout << "Best Ind:" << std::endl;
@@ -139,20 +165,24 @@ main()
     // std::cout << "Fitness:" << std::endl;
     // std::cout << gar.evaluateIndividual( best ) << std::endl;
 
-    gar.run(8000, 0.999999f, verbose); 
+    gar.run(8000, 0.99f, verbose); 
+	
 
     // std::cout << "After run" << std::endl;
     // gar.printPopulation();
     // std::cout << "Best Ind:" << std::endl;
     best = gar.getBestIndividual();
-    // best.print(sliceLength);
+    best.print(sliceLength);
     // std::cout << "Fitness:" << std::endl;
     // std::cout << gar.evaluateIndividual( best ) << std::endl;
 
 #if 1
 	int samplerate = 44100;
 	SynthWrapper synth(samplerate);
-	individualToAudio("tmp.wav", best, synth, 120, 16, numberOfSlices, sliceLength);
+	Delay delay(0.5f, 500, 0.5, true, 5000, samplerate);
+	std::vector< Effect * > fx;
+	fx.push_back( &delay );
+	individualToAudio("tmp.wav", best, synth, fx, 120, 4, numberOfSlices, sliceLength);
 #endif
 #endif
     
