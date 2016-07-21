@@ -58,7 +58,7 @@ public:
 					std::cout << std::endl;
 					std::cout << "Max fitness exceeded threshold after " << i << " iterations." << std::endl;
 				}
-				return;
+				break;
 			}
 
             Population newPopulation;
@@ -83,6 +83,8 @@ public:
 		if (verbose)
 		{
 			std::cout << std::endl;
+			Individual best = getBestIndividual();
+			best.evaluate(evaluators_, true);
 		}
     }
 

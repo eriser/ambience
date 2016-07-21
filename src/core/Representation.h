@@ -6,6 +6,7 @@
 #include <map>
 #include <iostream>
 #include <cassert>
+#include <typeinfo>
 
 namespace ambience
 {
@@ -58,6 +59,10 @@ class Evaluator
 public:
     virtual ~Evaluator(){}
     virtual float evaluate( const Individual & individual ) = 0;
+	virtual std::string getName()
+	{
+		return typeid(*this).name();
+	}
 };
 
 
@@ -181,14 +186,22 @@ public:
     }
 
     float 
-    evaluate( std::vector< Evaluator * > evaluators ) const
+    evaluate( std::vector< Evaluator * > evaluators, bool verbose = false ) const
     {
-        float fitness = 0;
+        float overallFitness = 0;
+
         for ( unsigned i = 0; i < evaluators.size(); i++ )
         {
-            fitness += evaluators[i]->evaluate( *this );
+			float fitness = evaluators[i]->evaluate(*this);
+
+			if (verbose)
+			{
+				std::cout << evaluators[i]->getName() << ":\t" << fitness << std::endl;
+			}
+
+			overallFitness += fitness;
         }
-        return fitness / (float) evaluators.size();
+        return overallFitness / (float) evaluators.size();
     }
 
 	std::vector< Chromosome >
