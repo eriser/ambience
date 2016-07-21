@@ -126,12 +126,7 @@ class Individual
 {
 public:
     
-    // TODO: Rule of three?
     Individual()
-    {}
-
-    Individual( const Individual & individual ) :
-        chromosomes_( individual.chromosomes_ )
     {}
 
     Individual( int length )
