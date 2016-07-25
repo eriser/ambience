@@ -23,7 +23,9 @@ public:
     {
         for ( int i = 0; i < generations; i++ )
         {
-			float bestFitness = evaluateIndividual(getBestIndividual());
+			population_.evaluate(evaluators_);
+
+			float bestFitness = getBestIndividual().getFitness();
 
 			if (verbose)
 			{
@@ -56,7 +58,7 @@ public:
 				if (verbose)
 				{
 					std::cout << std::endl;
-					std::cout << "Max fitness exceeded threshold after " << i << " iterations." << std::endl;
+					std::cout << "Max fitness exceeded threshold after " << i << " iterations.";
 				}
 				break;
 			}
@@ -84,7 +86,7 @@ public:
 		{
 			std::cout << std::endl;
 			Individual best = getBestIndividual();
-			best.evaluate(evaluators_, true);
+			best.evaluate( evaluators_, verbose=true );
 		}
     }
 
@@ -98,12 +100,6 @@ public:
     getBestIndividual()
     {
         return population_.getBestIndividual( evaluators_ );
-    }
-
-    float
-    evaluateIndividual( const Individual & individual )
-    {
-        return individual.evaluate( evaluators_ ); 
     }
 
     void

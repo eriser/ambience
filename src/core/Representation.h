@@ -85,21 +85,6 @@ public:
         return note_;
     }
 
-#if 0
-    int
-    count( Note note ) const
-    {
-        int numberOfPassedNote = 0;
-        for ( int i = 0; i < notes_.size(); i++ )
-        {
-            if ( notes_[i] == note )
-            {
-                numberOfPassedNote++;
-            }
-        }
-        return numberOfPassedNote;
-    }
-#endif
     void 
     shuffle()
     {
@@ -114,10 +99,7 @@ public:
     }
 
 private:
-#if 0
-    const static int CHROMOSOME_LENGTH = 30;
-    std::array< Note, CHROMOSOME_LENGTH > notes_;
-#endif
+
     Note note_;
 };
 
@@ -181,12 +163,19 @@ public:
     }
 
     float 
-    evaluate( std::vector< Evaluator * > evaluators, bool verbose = false ) const
+    getFitness() const
     {
-        float overallFitness = 0;
+		return fitness_;
+    }
 
-        for ( unsigned i = 0; i < evaluators.size(); i++ )
-        {
+	void
+	evaluate(std::vector< Evaluator * > & evaluators, bool verbose = false)
+	{
+
+		float overallFitness = 0;
+
+		for (unsigned i = 0; i < evaluators.size(); i++)
+		{
 			float fitness = evaluators[i]->evaluate(*this);
 
 			if (verbose)
@@ -195,9 +184,9 @@ public:
 			}
 
 			overallFitness += fitness;
-        }
-        return overallFitness / (float) evaluators.size();
-    }
+		}
+		fitness_ = overallFitness / (float)evaluators.size();
+	}
 
 	std::vector< Chromosome >
 	slice(unsigned index, unsigned sliceLength)
@@ -250,7 +239,7 @@ public:
     void
     print()
     {
-        for ( Chromosome chromosome : chromosomes_ )
+        for ( Chromosome & chromosome : chromosomes_ )
         {
             chromosome.print();
         }
@@ -272,6 +261,7 @@ public:
 
 private:
     std::vector< Chromosome > chromosomes_;
+	float fitness_;
 };
 
 
@@ -291,7 +281,7 @@ public:
     }
 
     void
-    add( Individual individual )
+    add( Individual & individual )
     {
         individuals_.push_back( individual );
     }
@@ -318,18 +308,18 @@ public:
     }
 
     Individual
-    select ( int tournamentSize, std::vector< Evaluator * > evaluators )
+    select ( int tournamentSize, std::vector< Evaluator * > & evaluators )
     {
         int randomPopulationIdx = rand() % size();
         Individual best = individuals_[randomPopulationIdx];
-        float bestFitness = best.evaluate( evaluators );
+        float bestFitness = best.getFitness();
 
         for ( int j = 1; j < tournamentSize; j++ )
         {
             randomPopulationIdx = rand() % size();
             Individual challenger = individuals_[randomPopulationIdx];
 
-            float challengerFitness = challenger.evaluate( evaluators );
+            float challengerFitness = challenger.getFitness();
             if ( challengerFitness > bestFitness )
             {
                 bestFitness = challengerFitness;
@@ -341,14 +331,14 @@ public:
     }
 
     Individual
-    getBestIndividual( std::vector< Evaluator * > evaluators )
+    getBestIndividual( std::vector< Evaluator * > & evaluators )
     {
         int bestIndividualIdx = 0;
         float bestFitness = 0;
 
         for ( int i = 0; i < size(); i++ )
         {
-            float challengerFitness = individuals_[i].evaluate( evaluators );
+            float challengerFitness = individuals_[i].getFitness();
             if ( challengerFitness > bestFitness )
             {
                 bestIndividualIdx = i;
@@ -362,11 +352,20 @@ public:
     void
     print()
     {
-        for ( Individual individual : individuals_ )
+        for ( Individual & individual : individuals_ )
         {
             individual.print();
         }
     }
+
+	void
+	evaluate(std::vector< Evaluator * > & evaluators, bool verbose = false)
+	{
+		for (unsigned i = 0; i < individuals_.size(); i++)
+		{
+			individuals_[i].evaluate(evaluators, verbose);
+		}
+	}
 
 private:
 
