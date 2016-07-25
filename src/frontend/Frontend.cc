@@ -18,7 +18,6 @@ extern "C"
 
 std::vector<real>
 individualToAudio(
-	const std::string &       outputFile,
 	ambience::Individual &	  individual,
 	SynthWrapper &            synth,
 	std::vector< Effect * > & fx,
@@ -130,14 +129,8 @@ main()
 	bool verbose = true;
     GeneticAlgorithmRunner gar( populationSize, individualSize );
 
-
-
 	ambience::NumberOfNotesEvaluator numberOfNotesEvaluator(6*5);
 	gar.registerEvaluator(numberOfNotesEvaluator);
-#if 0
-	ambience::NoteTimeIntervalEvaluator notesInTimeIntervalEvaluator(4, 8, sliceLength);
-	gar.registerEvaluator(notesInTimeIntervalEvaluator);
-#endif
 	ambience::NotesInRangeEvaluator notesInRangeEvaluator(40, 60, sliceLength);
 	gar.registerEvaluator(notesInRangeEvaluator);
 	ambience::HoldRestRatioEvaluator holdRestRatioEvaluator(0.3f);
@@ -151,24 +144,28 @@ main()
 	ambience::NotesInSliceEvaluator a(std::set<unsigned>({ 0, 4, 8, 12, 16, 20 }), sliceLength);
 	gar.registerEvaluator(a);
 
-
-    // gar.printPopulation();
-    // std::cout << "Best Ind:" << std::endl;
     Individual best = gar.getBestIndividual();
-    // best.print(sliceLength);
-    // std::cout << "Fitness:" << std::endl;
-    // std::cout << gar.evaluateIndividual( best ) << std::endl;
 
     gar.run(5000, 0.99999f, verbose); 
-	
 
-    // std::cout << "After run" << std::endl;
-    // gar.printPopulation();
-    // std::cout << "Best Ind:" << std::endl;
     best = gar.getBestIndividual();
     best.print(sliceLength);
-    // std::cout << "Fitness:" << std::endl;
-    // std::cout << gar.evaluateIndividual( best ) << std::endl;
+
+
+	GeneticAlgorithmRunner gar2(populationSize, individualSize);
+
+	gar2.registerEvaluator(numberOfNotesEvaluator);
+	gar2.registerEvaluator(notesInRangeEvaluator);
+	gar2.registerEvaluator(holdRestRatioEvaluator);
+	gar2.registerEvaluator(notesInSetEvaluator);
+	gar2.registerEvaluator(a);
+
+	Individual best2 = gar2.getBestIndividual();
+
+	gar2.run(5000, 0.99999f, verbose);
+
+	best2 = gar2.getBestIndividual();
+	best2.print(sliceLength);
 
 #if 1
 	int samplerate = 44100;
@@ -176,7 +173,23 @@ main()
 	Delay delay(0.5f, 500, 0.5, true, 5000, samplerate);
 	std::vector< Effect * > fx;
 	fx.push_back( &delay );
-	std::vector<real> audio = individualToAudio("tmp.wav", best, synth, fx, 120, 4, numberOfSlices, sliceLength);
+	std::vector<real> audioLeft = individualToAudio(best, synth, fx, 120, 4, numberOfSlices, sliceLength);
+
+	SynthWrapper synth2(samplerate);
+	Delay delay2(0.5f, 500, 0.5, true, 5000, samplerate);
+	std::vector< Effect * > fx2;
+	fx2.push_back(&delay2);
+	std::vector<real> audioRight = individualToAudio(best2, synth2, fx2, 120, 4, numberOfSlices, sliceLength);
+
+
+	std::vector<real> audioInterleaved(audioLeft.size() + audioRight.size(), (real)0);
+	for (unsigned i = 0; i < audioLeft.size(); i++)
+	{
+		audioInterleaved[2 * i] = audioLeft[i];
+		audioInterleaved[2 * i + 1] = audioRight[i];
+	}
+
+	writeWav("tmp.wav", audioInterleaved, 2, samplerate, 16);
 
 #endif
 #endif
