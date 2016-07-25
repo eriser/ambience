@@ -6,6 +6,8 @@
 #include <string>
 #include <cstdint>
 #include <cmath>
+#include <vector>
+#include <cassert>
 
 inline
 static
@@ -64,13 +66,14 @@ streamWrite (
 void
 writeWav (
       const std::string &  outputFilePath,
-      real*                interleavedData,
-      uint32_t             numSamples,       // for stereo, 1 sample == 2 entries in the interleaved data
+      std::vector<real> &  interleavedData,
       uint16_t             numChannels,
       uint32_t             sampleRate,
       uint16_t             bitsPerSample
       )
 {
+	assert(numChannels > 0);
+	uint32_t numSamples = interleavedData.size() / numChannels;
 
    // RIFF header
    uint32_t riff           = swap_uint32( 0x52494646 );  // "RIFF"

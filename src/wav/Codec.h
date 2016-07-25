@@ -5,12 +5,12 @@
 
 #include <string>
 #include <cstdint>
+#include <vector>
 
 void
 writeWav (
       const std::string &  outputFilePath,
-      real*                interleavedData,
-      uint32_t             numSamples,
+      std::vector<real> &  interleavedData,
       uint16_t             numChannels,
       uint32_t             sampleRate,
       uint16_t             bitsPerSample

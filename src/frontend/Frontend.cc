@@ -16,7 +16,7 @@ extern "C"
 
 #include <string.h>
 
-void
+std::vector<real>
 individualToAudio(
 	const std::string &       outputFile,
 	ambience::Individual &	  individual,
@@ -35,8 +35,7 @@ individualToAudio(
 	unsigned long numberOfSamples = (unsigned long) (samplerate * (1.0f / quartersPerSecond) * numberOfQuarters);
 	unsigned long numberOfSamplesPerSlice = numberOfSamples / numberOfSlices;
 
-	real * audio = (real *) malloc(numberOfSamples * sizeof(real));
-	memset(audio, 0, numberOfSamples * sizeof(real));
+	std::vector<real> audio(numberOfSamples, (real)0);
 
 	unsigned long currentSample = 0;
 
@@ -72,16 +71,7 @@ individualToAudio(
 		currentSample += numberOfSamplesPerSlice;
 	}
 
-	writeWav(
-		outputFile,
-		&audio[0],
-		numberOfSamples,
-		1,
-		samplerate,
-		16
-		);
-
-	free(audio);
+	return audio;
 }
 
 int
@@ -186,7 +176,8 @@ main()
 	Delay delay(0.5f, 500, 0.5, true, 5000, samplerate);
 	std::vector< Effect * > fx;
 	fx.push_back( &delay );
-	individualToAudio("tmp.wav", best, synth, fx, 120, 4, numberOfSlices, sliceLength);
+	std::vector<real> audio = individualToAudio("tmp.wav", best, synth, fx, 120, 4, numberOfSlices, sliceLength);
+
 #endif
 #endif
     
