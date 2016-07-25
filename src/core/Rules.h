@@ -189,6 +189,7 @@ private:
 
 };
 
+#if 0
 // Best fitness if there are no notes in slices before and after a slice with notes
 // as specified by the parameters
 // interval == 0 means notes follow directly, 
@@ -243,6 +244,40 @@ private:
     unsigned maxEmptySlices_;
     unsigned sliceLength_;
 
+};
+#endif
+
+// Best fitness if notes are only present in the specified slices
+class NotesInSliceEvaluator : public Evaluator
+{
+public:
+
+	NotesInSliceEvaluator(std::set< unsigned > & noteSlices, unsigned sliceLength) :
+		noteSlices_(noteSlices), sliceLength_(sliceLength)
+	{}
+
+	virtual float evaluate(const Individual & individual)
+	{
+		float fitness = 0.0f;
+		unsigned numberOfNoteSlices = 0;
+		unsigned numberOfSlices = individual.numberOfSlices(sliceLength_);
+		for (unsigned slice = 0; slice < numberOfSlices; slice++)
+		{
+			if (noteSlices_.find(slice) == noteSlices_.end())
+			{
+				unsigned numNotesInSlice = individual.count(ambience::Note::ON, slice, sliceLength_);
+				fitness += (float)numNotesInSlice / (float)sliceLength_;
+				numberOfNoteSlices++;
+			}
+		}
+
+		return 1.0f - (fitness / (float)numberOfNoteSlices);
+	}
+
+private:
+
+	std::set< unsigned > noteSlices_;
+	unsigned sliceLength_;
 };
 
 }

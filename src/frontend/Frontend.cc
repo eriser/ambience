@@ -142,20 +142,24 @@ main()
 
 
 
-	ambience::NumberOfNotesEvaluator numberOfNotesEvaluator(1);
+	ambience::NumberOfNotesEvaluator numberOfNotesEvaluator(6*5);
 	gar.registerEvaluator(numberOfNotesEvaluator);
-	ambience::SingleNoteEvaluator singleNoteEvaluator(sliceLength);
-	gar.registerEvaluator(singleNoteEvaluator);
-	ambience::NotesInSetEvaluator notesInSetEvaluator(CPentatonic, sliceLength);
-	gar.registerEvaluator(notesInSetEvaluator);
-	ambience::NotesInRangeEvaluator notesInRangeEvaluator(60, 80, sliceLength);
+#if 0
+	ambience::NoteTimeIntervalEvaluator notesInTimeIntervalEvaluator(4, 8, sliceLength);
+	gar.registerEvaluator(notesInTimeIntervalEvaluator);
+#endif
+	ambience::NotesInRangeEvaluator notesInRangeEvaluator(40, 60, sliceLength);
 	gar.registerEvaluator(notesInRangeEvaluator);
 	ambience::HoldRestRatioEvaluator holdRestRatioEvaluator(0.3f);
 	gar.registerEvaluator(holdRestRatioEvaluator);
+	ambience::NotesInSetEvaluator notesInSetEvaluator(CPentatonic, sliceLength);
+	gar.registerEvaluator(notesInSetEvaluator);
 #if 0
-	ambience::NoteTimeIntervalEvaluator notesInTimeIntervalEvaluator(6, 8, sliceLength);
-	gar.registerEvaluator(notesInTimeIntervalEvaluator);
+	ambience::SingleNoteEvaluator singleNoteEvaluator(sliceLength, 1.0f);
+	gar.registerEvaluator(singleNoteEvaluator);
 #endif
+	ambience::NotesInSliceEvaluator a(std::set<unsigned>({ 0, 4, 8, 12, 16, 20 }), sliceLength);
+	gar.registerEvaluator(a);
 
 
     // gar.printPopulation();
@@ -165,7 +169,7 @@ main()
     // std::cout << "Fitness:" << std::endl;
     // std::cout << gar.evaluateIndividual( best ) << std::endl;
 
-    gar.run(8000, 0.99f, verbose); 
+    gar.run(5000, 0.99999f, verbose); 
 	
 
     // std::cout << "After run" << std::endl;
