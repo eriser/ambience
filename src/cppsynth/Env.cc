@@ -1,5 +1,6 @@
 
 #include "Env.h"
+#include <cmath>
 
 Env::Env( ADSR & adsr, int samplerate ) :
       adsr_( adsr ), samplerate_( samplerate )
@@ -46,6 +47,11 @@ Env::noteOff()
    enterStage( RELEASE );
 }
 
+stage_type
+Env::getCurrentStage()
+{
+	return adsr_.current_stage;
+}
 
 real
 Env::getSample()
@@ -56,7 +62,7 @@ Env::getSample()
    {
       if (adsr_.current_sample_index >= adsr_.next_stage_sample_index)
       {
-         stage_type new_stage = (adsr_.current_stage + 1) % NUM_STAGES;
+         stage_type new_stage = static_cast<stage_type>((adsr_.current_stage + 1) % NUM_STAGES);
          enterStage( new_stage );
       }
 

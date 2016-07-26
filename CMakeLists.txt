@@ -54,13 +54,14 @@ set( FX_HEADERS
 include_directories (
     src/util
     src/wav
-    src/synth
+	src/cppsynth
     src/core
 	src/fx
     )
 	
 add_subdirectory( src/synth )
 add_subdirectory( src/wav )
+add_subdirectory( src/cppsynth )
 
 add_executable ( ambience
     ${CORE_HEADERS}
@@ -69,7 +70,7 @@ add_executable ( ambience
     )
 
 target_link_libraries( ambience 
-    synth 
-    wav 
+    wav
+	cppsynth
     )
 

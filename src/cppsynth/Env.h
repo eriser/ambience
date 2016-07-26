@@ -42,6 +42,7 @@ public:
    void noteOff();
 
    real getSample();
+   stage_type getCurrentStage();
 
 private:
 

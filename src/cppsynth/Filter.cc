@@ -2,6 +2,8 @@
 #include "Filter.h"
 #include "Types.h"
 
+#include <cstring>
+
 Filter::Filter()
 {
    memset(a_buffer, 0, sizeof(a_buffer));

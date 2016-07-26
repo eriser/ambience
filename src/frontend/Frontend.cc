@@ -1,25 +1,27 @@
 #include "Codec.h"
 #include "Types.h"
-#include "SynthWrapper.h"
+// #include "SynthWrapper.h"
 #include "Representation.h"
 #include "Evolution.h"
 #include "Rules.h"
 #include "Effect.h"
 #include "Delay.h"
+#include "Synth.h"
 
 #include <cstdlib>
+#include <string.h>
 
+#if 0
 extern "C"
 {
 #include "synth.h"
 }
-
-#include <string.h>
+#endif
 
 std::vector<real>
 individualToAudio(
 	ambience::Individual &	  individual,
-	SynthWrapper &            synth,
+	Synth &                   synth,
 	std::vector< Effect * > & fx,
 	float                     bpm,
 	unsigned                  slicesPerWholeNote,
@@ -40,6 +42,7 @@ individualToAudio(
 
 	for (unsigned slice = 0; slice < numberOfSlices; slice++)
 	{
+		std::cout << "slice: " << slice << std::endl;
 		for (unsigned note = 0; note < sliceLength; note++)
 		{
 			ambience::Note currentNote = individual(slice, note, sliceLength).note();
@@ -73,9 +76,11 @@ individualToAudio(
 	return audio;
 }
 
+
 int
 main()
 {
+
 
 #ifndef NDEBUG
 	std::cout << "--- Debug build ---" << std::endl;
@@ -168,14 +173,16 @@ main()
 	best2.print(sliceLength);
 
 #if 1
+	unsigned numVoices = 16;
+	unsigned oscillatorsPerVoice = 3;
 	int samplerate = 44100;
-	SynthWrapper synth(samplerate);
+	Synth synth(numVoices, oscillatorsPerVoice, samplerate);
 	Delay delay(0.5f, 500, 0.5, true, 5000, samplerate);
 	std::vector< Effect * > fx;
 	fx.push_back( &delay );
 	std::vector<real> audioLeft = individualToAudio(best, synth, fx, 120, 4, numberOfSlices, sliceLength);
 
-	SynthWrapper synth2(samplerate);
+	Synth synth2(numVoices, oscillatorsPerVoice, samplerate);
 	Delay delay2(0.5f, 500, 0.5, true, 5000, samplerate);
 	std::vector< Effect * > fx2;
 	fx2.push_back(&delay2);
