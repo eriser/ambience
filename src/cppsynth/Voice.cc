@@ -1,5 +1,7 @@
 #include "Voice.h"
 
+#include <cmath>
+
 Voice::Voice(unsigned numberOfOscillators, int samplerate)
 {
 	for (unsigned i = 0; i < numberOfOscillators; i++)

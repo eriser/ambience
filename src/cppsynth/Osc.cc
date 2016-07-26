@@ -4,6 +4,7 @@
 #include "Types.h"
 
 #include <cmath>
+#include <cstdlib>
 
 Oscillator::Oscillator(int samplerate)
 {
