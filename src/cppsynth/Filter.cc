@@ -8,8 +8,8 @@ Filter::Filter()
 {
    memset(a_buffer, 0, sizeof(a_buffer));
 
-   cutoff = 0.5;
-   resonance = 0.0;
+   cutoff_ = 0.5;
+   resonance_ = 0.0;
    cutoff_mod = 0.0;
 
    calculateFeedbackAmount();
@@ -81,7 +81,7 @@ Filter::getSample( real input )
 real
 Filter::calculateCutoff()
 {
-   real val = cutoff + cutoff_mod;
+   real val = cutoff_ + cutoff_mod;
    val = val < 0.0 ? 0.0 : val;
    val = val > 0.999 ? 0.999 : val;
    return val;
@@ -91,7 +91,7 @@ Filter::calculateCutoff()
 void
 Filter::calculateFeedbackAmount()
 {
-   feedback_amount = resonance + resonance / ( 1.0 - calculateCutoff() );
+   feedback_amount = resonance_ + resonance_ / ( 1.0 - calculateCutoff() );
 }
 
 

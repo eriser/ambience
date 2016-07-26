@@ -32,13 +32,13 @@ public:
 
    void setCutoff( real cutoff )
    {
-      this->cutoff = cutoff;
+      this->cutoff_ = cutoff;
       calculateFeedbackAmount();
    }
 
    real getCutoff()
    {
-      return cutoff;
+      return cutoff_;
    }
 
    void setCutoffMod( real cutoffMod )
@@ -54,13 +54,13 @@ public:
 
    void setResonance( real resonance )
    {
-      this->resonance = resonance;
+      this->resonance_ = resonance;
       calculateFeedbackAmount();
    }
 
    real getResonance()
    {
-      return resonance;
+      return resonance_;
    }
 
 
@@ -70,8 +70,8 @@ private:
    void calculateFeedbackAmount();
 
    real  a_buffer[FILTER_BUFFER_LENGTH];
-   real  cutoff;
-   real  resonance;
+   real  cutoff_;
+   real  resonance_;
    real  cutoff_mod;
    real  feedback_amount;
    filter_mode_type     mode;

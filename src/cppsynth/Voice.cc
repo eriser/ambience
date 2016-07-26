@@ -116,7 +116,7 @@ real Voice::getSample()
 
 	real sum_sample = 0.0;
 
-	for (int i = 0; i < a_oscillators.size(); i++)
+	for (int i = 0; i < (int)a_oscillators.size(); i++)
 	{
 		real sample = a_oscillators[i]->getSample();
 

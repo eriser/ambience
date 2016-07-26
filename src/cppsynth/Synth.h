@@ -9,7 +9,7 @@ class Synth
 {
 public:
 
-	Synth(unsigned numVoices, unsigned oscillatorsPerVoice, int samplerate);
+	Synth(int numVoices, int oscillatorsPerVoice, int samplerate);
 
 	void noteOn(int midiNote);
 	void noteOff(int midiNote);

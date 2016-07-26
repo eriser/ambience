@@ -42,7 +42,6 @@ individualToAudio(
 
 	for (unsigned slice = 0; slice < numberOfSlices; slice++)
 	{
-		std::cout << "slice: " << slice << std::endl;
 		for (unsigned note = 0; note < sliceLength; note++)
 		{
 			ambience::Note currentNote = individual(slice, note, sliceLength).note();
@@ -146,7 +145,8 @@ main()
 	ambience::SingleNoteEvaluator singleNoteEvaluator(sliceLength, 1.0f);
 	gar.registerEvaluator(singleNoteEvaluator);
 #endif
-	ambience::NotesInSliceEvaluator a(std::set<unsigned>({ 0, 4, 8, 12, 16, 20 }), sliceLength);
+	std::set<unsigned> set = { 0, 4, 8, 12, 16, 20 };
+	ambience::NotesInSliceEvaluator a(set, sliceLength);
 	gar.registerEvaluator(a);
 
     Individual best = gar.getBestIndividual();

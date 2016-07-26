@@ -42,7 +42,7 @@ public:
 				std::string output = "Iteration " + index + " / " + std::to_string(generations) + " (max fitness = " + fitnessString + ")";
 				if (i > 0)
 				{
-					for (unsigned i = 0; i < output.size(); i++)
+					for (unsigned j = 0; j < output.size(); j++)
 					{
 						printf("\b");
 					}
@@ -65,12 +65,12 @@ public:
 
             Population newPopulation;
             
-            for ( int i = 0; i < population_.size() / 2; i++ )
+            for ( int j = 0; j < population_.size() / 2; j++ )
             {
                 // select parents from population
                 int tournamentSize = 10;
-                Individual parent1 = population_.select( tournamentSize, evaluators_ );
-                Individual parent2 = population_.select( tournamentSize, evaluators_ );
+                Individual parent1 = population_.select( tournamentSize );
+                Individual parent2 = population_.select( tournamentSize );
 
                 // mate and insert into population
                 parent1.mateWith( parent2 );
@@ -99,7 +99,7 @@ public:
     Individual
     getBestIndividual()
     {
-        return population_.getBestIndividual( evaluators_ );
+        return population_.getBestIndividual();
     }
 
     void

@@ -30,11 +30,11 @@ private:
 	real poly_blep(real t);
 
 	waveform_type   waveform;
-	real            frequency;
+	real            frequency_;
 	real            phase;
 	int             samplerate;
 	real            gain;
-	real            detune;
+	real            detune_;
 	real            last_output;
 	real            phase_increment;
 

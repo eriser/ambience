@@ -1,6 +1,6 @@
 #include "Synth.h"
 
-Synth::Synth(unsigned numVoices, unsigned oscillatorsPerVoice, int samplerate) :
+Synth::Synth(int numVoices, int oscillatorsPerVoice, int samplerate) :
 	lfo(samplerate)
 {
 	this->samplerate = samplerate;
@@ -18,7 +18,7 @@ void Synth::noteOn(int midiNote)
 {
 	int idx = getFreeVoiceIndex();
 
-	if (idx < 0 || idx >= a_voices.size())
+	if (idx < 0 || idx >= (int)a_voices.size())
 	{
 		return;
 	}
@@ -32,7 +32,7 @@ void Synth::noteOff(int midiNote)
 {
 	int idx = -1;
 
-	for (int i = 0; i < a_voices.size(); i++)
+	for (int i = 0; i < (int)a_voices.size(); i++)
 	{
 		if (a_voices[i]->getMidiNote() == midiNote &&
 			a_voices[i]->isPressed())
@@ -42,7 +42,7 @@ void Synth::noteOff(int midiNote)
 		}
 	}
 
-	if (idx < 0 || idx >= a_voices.size())
+	if (idx < 0 || idx >= (int)a_voices.size())
 	{
 		return;
 	}
@@ -57,7 +57,7 @@ real Synth::getSample()
 
 	real lfo_sample = lfo.getSample();
 
-	for (int i = 0; i < a_voices.size(); i++)
+	for (unsigned i = 0; i < a_voices.size(); i++)
 	{
 		if (a_voices[i]->isActive())
 		{
@@ -96,7 +96,7 @@ int Synth::getFreeVoiceIndex()
 {
 	int free_voice = -1;
 
-	for (int i = 0; i < a_voices.size(); i++)
+	for (int i = 0; i < (int)a_voices.size(); i++)
 	{
 		if (!a_voices[i]->isActive())
 		{

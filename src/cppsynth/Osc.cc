@@ -21,14 +21,14 @@ Oscillator::Oscillator(int samplerate)
 
 void Oscillator::setFrequency(real frequency)
 {
-	this->frequency = frequency;
+	this->frequency_ = frequency;
 	update_increment();
 }
 
 void Oscillator::setDetune(real detune)
 {
-	this->detune = detune;
-	real new_frequency = frequency * pow(2.0, (detune / 1200.0));
+	this->detune_ = detune;
+	real new_frequency = frequency_ * pow(2.0, (detune / 1200.0));
 	setFrequency(new_frequency);
 }
 
@@ -98,7 +98,7 @@ void Oscillator::reset()
 
 void Oscillator::update_increment()
 {
-	phase_increment = frequency * 2.0 * M_PI / (real)samplerate;
+	phase_increment = frequency_ * 2.0 * M_PI / (real)samplerate;
 }
 
 real Oscillator::poly_blep(real t)

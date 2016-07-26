@@ -308,7 +308,7 @@ public:
     }
 
     Individual
-    select ( int tournamentSize, std::vector< Evaluator * > & evaluators )
+    select ( int tournamentSize )
     {
         int randomPopulationIdx = rand() % size();
         Individual best = individuals_[randomPopulationIdx];
@@ -331,7 +331,7 @@ public:
     }
 
     Individual
-    getBestIndividual( std::vector< Evaluator * > & evaluators )
+    getBestIndividual()
     {
         int bestIndividualIdx = 0;
         float bestFitness = 0;
