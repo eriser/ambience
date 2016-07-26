@@ -5,6 +5,8 @@
 
 #include <vector>
 
+class Voice;
+
 class Synth
 {
 public:
@@ -17,6 +19,8 @@ public:
 	real getSample();
 
 	int getSampleRate();
+
+    void setCutoff(real frequency);
 
 private:
 

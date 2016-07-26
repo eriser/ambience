@@ -4,12 +4,15 @@
 #include "Osc.h"
 #include "Env.h"
 #include "Filter.h"
+#include "Synth.h"
 
 #include <vector>
 
 class Voice
 {
 public:
+
+    friend class Synth;
 
 	Voice(unsigned numberOfOscillators, int samplerate);
 

@@ -107,3 +107,14 @@ int Synth::getFreeVoiceIndex()
 
 	return free_voice;
 }
+
+void Synth::setCutoff(real frequency)
+{
+    for (int i = 0; i < a_voices.size(); i++)
+    {
+        for (int j = 0; j < a_voices[i]->a_filters.size(); j++)
+        {
+            a_voices[i]->a_filters[j]->setCutoff( frequency / (samplerate / 2.0) );
+        }
+    }
+}

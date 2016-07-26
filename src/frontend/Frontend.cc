@@ -177,12 +177,14 @@ main()
 	unsigned oscillatorsPerVoice = 3;
 	int samplerate = 44100;
 	Synth synth(numVoices, oscillatorsPerVoice, samplerate);
+    synth.setCutoff(3000.0);
 	Delay delay(0.5f, 500, 0.5, true, 5000, samplerate);
 	std::vector< Effect * > fx;
 	fx.push_back( &delay );
 	std::vector<real> audioLeft = individualToAudio(best, synth, fx, 120, 4, numberOfSlices, sliceLength);
 
 	Synth synth2(numVoices, oscillatorsPerVoice, samplerate);
+    synth2.setCutoff(1000.0);
 	Delay delay2(0.5f, 500, 0.5, true, 5000, samplerate);
 	std::vector< Effect * > fx2;
 	fx2.push_back(&delay2);
