@@ -22,16 +22,6 @@ swap_uint32 (
 
 inline
 static
-uint16_t
-swap_uint16 (
-      uint16_t val
-      )
-{
-    return (val << 8) | (val >> 8 );
-}
-
-inline
-static
 void
 streamWrite (
       std::ofstream &   outputFile,

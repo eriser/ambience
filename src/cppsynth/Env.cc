@@ -3,7 +3,7 @@
 #include <cmath>
 
 Env::Env( ADSR & adsr, int samplerate ) :
-      adsr_( adsr ), samplerate_( samplerate )
+      adsr_( adsr )
 {
    adsr_.a_stage_value[OFF]        = 0.0;
    adsr_.a_stage_value[ATTACK]     = 0.1;

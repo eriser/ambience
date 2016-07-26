@@ -50,7 +50,6 @@ private:
    void enterStage( stage_type newStage );
 
    ADSR adsr_;
-   int samplerate_;
 
 };
 
