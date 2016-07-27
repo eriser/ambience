@@ -21,4 +21,17 @@ interleave( std::vector<real> & left, std::vector<real> & right )
 
 }
 
+std::vector<real>
+add( std::vector<real> & left, std::vector<real> & right )
+{
+    assert( left.size() == right.size() );
+	std::vector<real> result(left.size(), (real)0);
+	for (unsigned i = 0; i < left.size(); i++)
+	{
+		result[i] = left[i] + right[i];
+	}
+
+    return result;
+
+}
 #endif

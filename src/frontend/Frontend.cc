@@ -77,6 +77,44 @@ individualToAudio(
 }
 
 
+ambience::Individual
+createMelody( unsigned sliceLength, unsigned numberOfSlices, unsigned numberOfNotes,
+              std::set<ambience::NoteValue> noteSet )
+{
+    using namespace ambience;
+
+	unsigned populationSize = 30;
+	unsigned individualSize = sliceLength * numberOfSlices;
+	bool verbose = true;
+
+    GeneticAlgorithmRunner gar( populationSize, individualSize );
+
+	NumberOfNotesEvaluator numberOfNotesEvaluator(numberOfNotes);
+	gar.registerEvaluator(numberOfNotesEvaluator);
+	
+    NotesInRangeEvaluator notesInRangeEvaluator(50, 70, sliceLength);
+	gar.registerEvaluator(notesInRangeEvaluator);
+
+	HoldRestRatioEvaluator holdRestRatioEvaluator(0.3f);
+	gar.registerEvaluator(holdRestRatioEvaluator);
+	
+    ambience::NotesInSetEvaluator notesInSetEvaluator(noteSet, sliceLength);
+	gar.registerEvaluator(notesInSetEvaluator);
+
+	ambience::SingleNoteEvaluator singleNoteEvaluator(sliceLength, 1.0f);
+	gar.registerEvaluator(singleNoteEvaluator);
+
+#if 0
+	std::set<unsigned> set;
+	ambience::NotesInSliceEvaluator a(set, sliceLength);
+	gar.registerEvaluator(a);
+#endif
+
+    gar.run(5000, 0.99999f, verbose); 
+
+    return gar.getBestIndividual();
+}
+
 int
 main()
 {
@@ -173,10 +211,14 @@ main()
 	best2 = gar2.getBestIndividual();
 	// best2.print(sliceLength);
 
+    Individual melody = createMelody( sliceLength, numberOfSlices, numberOfSlices, CPentatonic );
+
 #if 1
 	unsigned numVoices = 16;
 	unsigned oscillatorsPerVoice = 3;
 	int samplerate = 44100;
+    unsigned slicesPerWholeNote = 4;
+
 	Synth synth(numVoices, oscillatorsPerVoice, samplerate);
     synth.setCutoff(3000.0);
     synth.setDetune( 10, 0);
@@ -185,7 +227,7 @@ main()
 	Delay delay(0.5f, 500, 0.5, true, 5000, samplerate);
 	std::vector< Effect * > fx;
 	fx.push_back( &delay );
-	std::vector<real> audioLeft = individualToAudio(best, synth, fx, 120, 4, numberOfSlices, sliceLength);
+	std::vector<real> audioLeft = individualToAudio(best, synth, fx, 120, slicesPerWholeNote, numberOfSlices, sliceLength);
 
 	Synth synth2(numVoices, oscillatorsPerVoice, samplerate);
     synth2.setCutoff(3000.0);
@@ -195,12 +237,27 @@ main()
 	Delay delay2(0.5f, 500, 0.5, true, 5000, samplerate);
 	std::vector< Effect * > fx2;
 	fx2.push_back(&delay2);
-	std::vector<real> audioRight = individualToAudio(best, synth2, fx2, 120, 4, numberOfSlices, sliceLength);
+	std::vector<real> audioRight = individualToAudio(best, synth2, fx2, 120, slicesPerWholeNote, numberOfSlices, sliceLength);
 
 
 	std::vector<real> audioInterleaved = interleave( audioLeft, audioRight );
 
-	writeWav("tmp.wav", audioInterleaved, 2, samplerate, 16);
+    
+	Synth melodySynth(numVoices, oscillatorsPerVoice, samplerate);
+    melodySynth.setCutoff(5000.0);
+    melodySynth.setDetune( 10, 0);
+    melodySynth.setDetune( 10, 1);
+    melodySynth.setDetune( 10, 2);
+	Delay melodyDelay(0.5f, 500, 0.5, true, 5000, samplerate);
+	std::vector< Effect * > melodyFx;
+	fx.push_back( &melodyDelay );
+	std::vector<real> audioMelody = individualToAudio(melody, melodySynth, melodyFx, 120, slicesPerWholeNote, numberOfSlices, sliceLength);
+
+    std::vector<real> audioMelodyInterleaved = interleave( audioMelody, audioMelody );
+
+    std::vector<real> audioAll = add( audioMelodyInterleaved, audioInterleaved );
+	writeWav("tmp.wav", audioAll, 2, samplerate, 16);
+	// writeWav("tmp.wav", audioMelodyInterleaved, 2, samplerate, 16);
 
 #endif
 #endif
