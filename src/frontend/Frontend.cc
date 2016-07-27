@@ -7,6 +7,7 @@
 #include "Effect.h"
 #include "Delay.h"
 #include "Synth.h"
+#include "Audio.h"
 
 #include <cstdlib>
 #include <string.h>
@@ -191,12 +192,7 @@ main()
 	std::vector<real> audioRight = individualToAudio(best2, synth2, fx2, 120, 4, numberOfSlices, sliceLength);
 
 
-	std::vector<real> audioInterleaved(audioLeft.size() + audioRight.size(), (real)0);
-	for (unsigned i = 0; i < audioLeft.size(); i++)
-	{
-		audioInterleaved[2 * i] = audioLeft[i];
-		audioInterleaved[2 * i + 1] = audioRight[i];
-	}
+	std::vector<real> audioInterleaved = interleave( audioLeft, audioRight );
 
 	writeWav("tmp.wav", audioInterleaved, 2, samplerate, 16);
 
