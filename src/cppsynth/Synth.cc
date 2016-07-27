@@ -118,3 +118,13 @@ void Synth::setCutoff(real frequency)
         }
     }
 }
+
+
+void Synth::setDetune(real cents, int oscillatorId)
+{
+    for (int i = 0; i < a_voices.size(); i++)
+    {
+        a_voices[i]->a_oscillators[oscillatorId]->setDetune(cents);
+    }
+    
+}

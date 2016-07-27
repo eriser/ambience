@@ -26,11 +26,13 @@ public:
 
 private:
 
+    void updateFrequency();
 	void update_increment();
 	real poly_blep(real t);
 
 	waveform_type   waveform;
 	real            frequency_;
+    real            dryFrequency_;
 	real            phase;
 	int             samplerate;
 	real            gain;

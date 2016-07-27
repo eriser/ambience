@@ -21,6 +21,7 @@ public:
 	int getSampleRate();
 
     void setCutoff(real frequency);
+    void setDetune(real cents, int oscillatorId);
 
 private:
 

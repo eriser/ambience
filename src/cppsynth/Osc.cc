@@ -22,15 +22,21 @@ Oscillator::Oscillator(int samplerate)
 
 void Oscillator::setFrequency(real frequency)
 {
-	this->frequency_ = frequency;
-	update_increment();
+	this->dryFrequency_ = frequency;
+    updateFrequency();
 }
 
 void Oscillator::setDetune(real detune)
 {
 	this->detune_ = detune;
-	real new_frequency = frequency_ * pow(2.0, (detune / 1200.0));
-	setFrequency(new_frequency);
+    updateFrequency();
+}
+
+// combines detune and dryFrequency (frequency wihtout detune) to actual frequency
+void Oscillator::updateFrequency()
+{
+    this->frequency_ =  dryFrequency_ * pow(2.0, (detune_ / 1200.0));
+	update_increment();
 }
 
 real Oscillator::getSample()
