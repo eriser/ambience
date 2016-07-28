@@ -2,7 +2,11 @@
 #include "Types.h"
 // #include "SynthWrapper.h"
 #include "Representation.h"
+#include "Chromosome.h"
+#include "Individual.h"
+#include "Population.h"
 #include "Evolution.h"
+#include "Evaluator.h"
 #include "Rules.h"
 #include "Effect.h"
 #include "Delay.h"
@@ -129,11 +133,11 @@ main()
 
 #if 1
     
-	unsigned populationSize = 30;
+	// unsigned populationSize = 30;
 	unsigned sliceLength = 128;
 	unsigned numberOfSlices = 32;
-	unsigned individualSize = sliceLength * numberOfSlices;
-	bool verbose = true;
+	// unsigned individualSize = sliceLength * numberOfSlices;
+	// bool verbose = true;
 
 	std::set<unsigned> set = { 0, 4, 8, 12, 16, 20 };
     Individual chords = createChords( sliceLength, numberOfSlices, numberOfSlices, CPentatonic, set );

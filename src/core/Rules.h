@@ -8,6 +8,7 @@
 namespace ambience
 {
 
+
 // Best fitness for a large number of rests
 class RestEvaluator : public ambience::Evaluator
 {

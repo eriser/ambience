@@ -37,12 +37,6 @@ endif()
 
 # set(CORE_SOURCE)
 
-set( CORE_HEADERS
-	 src/core/Evolution.h
-	 src/core/Representation.h
-	 src/core/Rules.h
-	)
-	
 set( FRONTEND_SOURCES
 	 src/frontend/Frontend.cc
 	)
@@ -62,9 +56,9 @@ include_directories (
 add_subdirectory( src/synth )
 add_subdirectory( src/wav )
 add_subdirectory( src/cppsynth )
+add_subdirectory( src/core )
 
 add_executable ( ambience
-    ${CORE_HEADERS}
 	${FRONTEND_SOURCES}
 	${FX_HEADERS}
     )
@@ -72,5 +66,6 @@ add_executable ( ambience
 target_link_libraries( ambience 
     wav
 	cppsynth
+    core
     )
 
