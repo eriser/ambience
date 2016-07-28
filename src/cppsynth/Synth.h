@@ -35,4 +35,14 @@ private:
 
 };
 
+struct StereoSynth
+{
+    StereoSynth( Synth & l, Synth & r ) :
+        left( l ), right( r )
+    {}
+
+    Synth left;
+    Synth right;
+};
+
 #endif

@@ -8,6 +8,7 @@
 #include "Delay.h"
 #include "Synth.h"
 #include "Audio.h"
+#include "SynthCreator.h"
 
 #include <cstdlib>
 #include <string.h>
@@ -219,25 +220,17 @@ main()
 	int samplerate = 44100;
     unsigned slicesPerWholeNote = 4;
 
-	Synth synth(numVoices, oscillatorsPerVoice, samplerate);
-    synth.setCutoff(3000.0);
-    synth.setDetune( 10, 0);
-    synth.setDetune( 10, 1);
-    synth.setDetune( 10, 2);
+    StereoSynth chordSynth = createChordSynth( samplerate );
+
 	Delay delay(0.5f, 500, 0.5, true, 5000, samplerate);
 	std::vector< Effect * > fx;
 	fx.push_back( &delay );
-	std::vector<real> audioLeft = individualToAudio(best, synth, fx, 120, slicesPerWholeNote, numberOfSlices, sliceLength);
+	std::vector<real> audioLeft = individualToAudio(best, chordSynth.left, fx, 120, slicesPerWholeNote, numberOfSlices, sliceLength);
 
-	Synth synth2(numVoices, oscillatorsPerVoice, samplerate);
-    synth2.setCutoff(3000.0);
-    synth2.setDetune(-10, 0);
-    synth2.setDetune(-10, 1);
-    synth2.setDetune(-10, 2);
 	Delay delay2(0.5f, 500, 0.5, true, 5000, samplerate);
 	std::vector< Effect * > fx2;
 	fx2.push_back(&delay2);
-	std::vector<real> audioRight = individualToAudio(best, synth2, fx2, 120, slicesPerWholeNote, numberOfSlices, sliceLength);
+	std::vector<real> audioRight = individualToAudio(best, chordSynth.right, fx2, 120, slicesPerWholeNote, numberOfSlices, sliceLength);
 
 
 	std::vector<real> audioInterleaved = interleave( audioLeft, audioRight );
