@@ -3,6 +3,8 @@
 #include "Individual.h"
 
 #include <vector>
+#include <string>
+
 
 namespace ambience
 {

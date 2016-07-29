@@ -7,6 +7,7 @@
 #include <iostream>
 #include <cassert>
 #include <typeinfo>
+#include <string>
 
 using namespace ambience;
 
