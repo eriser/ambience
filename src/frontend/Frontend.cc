@@ -141,30 +141,35 @@ main()
 
 	std::set<unsigned> set = { 0, 4, 8, 12, 16, 20 };
     Individual chords = createChords( sliceLength, numberOfSlices, numberOfSlices, CPentatonic, set );
-    Individual melody = createMelody( sliceLength, numberOfSlices, numberOfSlices, CPentatonic );
+    // Individual melody = createMelody( sliceLength, numberOfSlices, numberOfSlices, CPentatonic );
 
 #if 1
 	unsigned numVoices = 16;
 	unsigned oscillatorsPerVoice = 3;
 	int samplerate = 44100;
-    unsigned slicesPerWholeNote = 4;
+    unsigned slicesPerWholeNote = 2;
 
-    StereoSynth chordSynth = createChordSynth( samplerate );
+	StereoSynth synth(numVoices, oscillatorsPerVoice, samplerate);
+	toChordSynth(synth);
+	synth.left.printParameters("left");
+	synth.right.printParameters("right");
+
+    // StereoSynth chordSynth = createChordSynth( samplerate );
 
 	Delay delay(0.5f, 500, 0.5, true, 5000, samplerate);
 	std::vector< Effect * > fx;
 	fx.push_back( &delay );
-	std::vector<real> audioLeft = individualToAudio(chords, chordSynth.left, fx, 120, slicesPerWholeNote, numberOfSlices, sliceLength);
+	std::vector<real> audioLeft = individualToAudio(chords, synth.left, fx, 120, slicesPerWholeNote, numberOfSlices, sliceLength);
 
 	Delay delay2(0.5f, 500, 0.5, true, 5000, samplerate);
 	std::vector< Effect * > fx2;
 	fx2.push_back(&delay2);
-	std::vector<real> audioRight = individualToAudio(chords, chordSynth.right, fx2, 120, slicesPerWholeNote, numberOfSlices, sliceLength);
+	std::vector<real> audioRight = individualToAudio(chords, synth.right, fx2, 120, slicesPerWholeNote, numberOfSlices, sliceLength);
 
 
-	std::vector<real> audioInterleaved = interleave( audioLeft, audioRight );
+	std::vector<real> audioAll = interleave( audioLeft, audioRight );
 
-    
+#if 0
 	Synth melodySynth(numVoices, oscillatorsPerVoice, samplerate);
     melodySynth.setCutoff(5000.0);
     melodySynth.setDetune( 10, 0);
@@ -178,8 +183,10 @@ main()
     std::vector<real> audioMelodyInterleaved = interleave( audioMelody, audioMelody );
 
     std::vector<real> audioAll = add( audioMelodyInterleaved, audioInterleaved );
+#endif
 	writeWav("tmp.wav", audioAll, 2, samplerate, 16);
 	// writeWav("tmp.wav", audioMelodyInterleaved, 2, samplerate, 16);
+
 
 #endif
 #endif

@@ -41,6 +41,17 @@ set( FRONTEND_SOURCES
 	 src/frontend/Frontend.cc
 	)
 
+set( FRONTEND_HEADERS
+	 src/frontend/IndividualCreator.h
+	 src/frontend/SynthCreator.h
+	)
+
+set( UTIL_HEADERS
+	 src/util/Audio.h
+	 src/util/Types.h
+	 src/util/ConvenienceMath.h
+	)
+
 set( FX_HEADERS
 	 src/fx/Delay.h
 	)
@@ -59,8 +70,10 @@ add_subdirectory( src/cppsynth )
 add_subdirectory( src/core )
 
 add_executable ( ambience
+	${FRONTEND_HEADERS}
 	${FRONTEND_SOURCES}
 	${FX_HEADERS}
+	${UTIL_HEADERS}
     )
 
 target_link_libraries( ambience 
