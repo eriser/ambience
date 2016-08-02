@@ -21,6 +21,8 @@ public:
 	void setFrequency(real frequency);
 	void setDetune(real detune);
 
+	real getDetune() { return detune_;  }
+
 	real getSample();
 	void reset();
 

@@ -44,6 +44,16 @@ public:
    real getSample();
    stage_type getCurrentStage();
 
+   void setAttack(real attack)   { adsr_.a_stage_value[ATTACK]  = attack; }
+   void setDecay(real decay)     { adsr_.a_stage_value[DECAY]   = decay; }
+   void setSustain(real sustain) { if (sustain > 1.0) sustain = 1.0; if (sustain < 0.0) sustain = 0.0; adsr_.a_stage_value[SUSTAIN] = sustain; }
+   void setRelease(real release) { adsr_.a_stage_value[RELEASE] = release; }
+
+   real getAttack()  { return adsr_.a_stage_value[ATTACK]; }
+   real getDecay()   { return adsr_.a_stage_value[DECAY]; }
+   real getSustain() { return adsr_.a_stage_value[SUSTAIN]; }
+   real getRelease() { return adsr_.a_stage_value[RELEASE]; }
+
 private:
 
    void calculateMultiplier( real startLevel, real endLevel, unsigned long long lengthInSamples );

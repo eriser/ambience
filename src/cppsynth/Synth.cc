@@ -1,17 +1,30 @@
 #include "Synth.h"
 
-Synth::Synth(int numVoices, int oscillatorsPerVoice, int samplerate) :
+#include <iostream>
+#include <string>
+
+Synth::Synth(unsigned numVoices, unsigned oscillatorsPerVoice, int samplerate) :
 	lfo(samplerate)
 {
 	this->samplerate = samplerate;
+	this->oscillatorsPerVoice = oscillatorsPerVoice;
 
-	for (int i = 0; i < numVoices; i++)
+	for (unsigned i = 0; i < numVoices; i++)
 	{
 		a_voices.push_back(new Voice(oscillatorsPerVoice, samplerate));
 	}
 
 	lfo_to_volume = 0.0;
 	lfo_to_filter = 0.0;
+}
+
+void Synth::reset()
+{
+	for (unsigned i = 0; i < a_voices.size(); i++)
+	{
+		a_voices[i]->reset();
+	}
+	lfo.reset();
 }
 
 void Synth::noteOn(int midiNote)
@@ -108,23 +121,178 @@ int Synth::getFreeVoiceIndex()
 	return free_voice;
 }
 
-void Synth::setCutoff(real frequency)
+void Synth::printParameters()
 {
-    for (int i = 0; i < a_voices.size(); i++)
-    {
-        for (int j = 0; j < a_voices[i]->a_filters.size(); j++)
-        {
-            a_voices[i]->a_filters[j]->setCutoff( frequency / (samplerate / 2.0) );
-        }
-    }
+	printParameters("untitled");
 }
 
+void Synth::printParameters(const std::string & name)
+{
+	std::cout << 
+		"Synth Parameters " << name <<
+	    "\n----------------"
+	<< std::endl;
+
+	for (unsigned i = 0; i < oscillatorsPerVoice; i++)
+	{
+		std::cout <<
+			"\n  Oscillator " << i << ":"
+			"\n    - Misc:"
+			"\n      + Detune:   " << getDetune(i) <<
+			"\n    - Filter:"
+			"\n      + Cutoff:   " << getCutoff(i) << 
+			"\n      + Attack:   " << getAttack(i) <<
+			"\n      + Decay:    " << getDecay(i) <<
+			"\n      + Sustain:  " << getSustain(i) <<
+			"\n      + Release:  " << getRelease(i) <<
+		std::endl;
+	}
+}
+
+/////////////
+// SETTERS //
+/////////////
+
+void Synth::setCutoff(real frequency)
+{
+	for (unsigned i = 0; i < oscillatorsPerVoice; i++)
+	{
+		setCutoff(frequency, i);
+	}
+}
+
+void Synth::setCutoff(real frequency, int oscillatorId)
+{
+	for (unsigned i = 0; i < a_voices.size(); i++)
+	{
+		a_voices[i]->a_filters[oscillatorId]->setCutoff(frequency / (samplerate / 2.0));
+	}
+}
 
 void Synth::setDetune(real cents, int oscillatorId)
 {
-    for (int i = 0; i < a_voices.size(); i++)
-    {
-        a_voices[i]->a_oscillators[oscillatorId]->setDetune(cents);
-    }
-    
+	for (unsigned i = 0; i < a_voices.size(); i++)
+	{
+		a_voices[i]->a_oscillators[oscillatorId]->setDetune(cents);
+	}
+
+}
+
+void Synth::setAttack(real attack)
+{
+	for (unsigned i = 0; i < oscillatorsPerVoice; i++)
+	{
+		setAttack(attack, i);
+	}
+}
+
+void Synth::setAttack(real attack, int oscillatorId)
+{
+	for (unsigned i = 0; i < a_voices.size(); i++)
+	{
+		a_voices[i]->a_volume_envelopes[oscillatorId]->setAttack(attack);
+	}
+}
+
+void Synth::setDecay(real decay)
+{
+	for (unsigned i = 0; i < oscillatorsPerVoice; i++)
+	{
+		setDecay(decay, i);
+	}
+}
+
+void Synth::setDecay(real decay, int oscillatorId)
+{
+	for (unsigned i = 0; i < a_voices.size(); i++)
+	{
+		a_voices[i]->a_volume_envelopes[oscillatorId]->setDecay(decay);
+	}
+}
+
+void Synth::setSustain(real sustain)
+{
+	for (unsigned i = 0; i < oscillatorsPerVoice; i++)
+	{
+		setSustain(sustain, i);
+	}
+}
+
+void Synth::setSustain(real sustain, int oscillatorId)
+{
+	for (unsigned i = 0; i < a_voices.size(); i++)
+	{
+		a_voices[i]->a_volume_envelopes[oscillatorId]->setSustain(sustain);
+	}
+}
+
+void Synth::setRelease(real release)
+{
+	for (unsigned i = 0; i < oscillatorsPerVoice; i++)
+	{
+		setRelease(release, i);
+	}
+}
+
+void Synth::setRelease(real release, int oscillatorId)
+{
+	for (unsigned i = 0; i < a_voices.size(); i++)
+	{
+		a_voices[i]->a_volume_envelopes[oscillatorId]->setRelease(release);
+	}
+}
+
+void Synth::setFilterEnvelopeAmount(real amount)
+{
+	for (unsigned i = 0; i < oscillatorsPerVoice; i++)
+	{
+		setFilterEnvelopeAmount(amount, i);
+	}
+}
+
+void Synth::setFilterEnvelopeAmount(real amount, int oscillatorId)
+{
+	for (unsigned i = 0; i < a_voices.size(); i++)
+	{
+		a_voices[i]->a_filter_envelope_amounts[oscillatorId] = amount;
+	}
+}
+
+/////////////
+// GETTERS //
+/////////////
+
+real Synth::getCutoff(int oscillatorId)
+{
+	return a_voices[0]->a_filters[oscillatorId]->getCutoff() * (samplerate / 2.0);
+}
+
+real Synth::getDetune(int oscillatorId)
+{
+	return a_voices[0]->a_oscillators[oscillatorId]->getDetune();
+}
+
+real Synth::getAttack(int oscillatorId)
+{
+	return a_voices[0]->a_volume_envelopes[oscillatorId]->getAttack();
+}
+
+real Synth::getDecay(int oscillatorId)
+{
+	return a_voices[0]->a_volume_envelopes[oscillatorId]->getDecay();
+}
+
+real Synth::getSustain(int oscillatorId)
+{
+	return a_voices[0]->a_volume_envelopes[oscillatorId]->getSustain();
+}
+
+real Synth::getRelease(int oscillatorId)
+{
+	return a_voices[0]->a_volume_envelopes[oscillatorId]->getRelease();
+}
+
+real Synth::getFilterEnvelopeAmount(int oscillatorId)
+{
+	return a_voices[0]->a_filter_envelope_amounts[oscillatorId];
 }
