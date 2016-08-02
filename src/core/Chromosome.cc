@@ -9,33 +9,35 @@
 #include <typeinfo>
 #include <string>
 
-using namespace ambience;
-
+namespace ambience
+{
 
 Chromosome::Chromosome()
 {
-    shuffle();
+	shuffle();
 }
 
-Chromosome::Chromosome( Note note ) :
-    note_( note )
+Chromosome::Chromosome(Note note) :
+	note_(note)
 {}
 
 Note
 Chromosome::note() const
 {
-    return note_;
-}
-
-void 
-Chromosome::shuffle()
-{
-    int numberOfNotes = static_cast< int >( Note::NUMBER_OF_NOTES );
-    note_ = static_cast< ambience::Note >( rand() % numberOfNotes ); 
+	return note_;
 }
 
 void
-Chromosome::print()
+Chromosome::shuffle()
 {
-    std::cout << noteToString.at(note_) << " ";
+	int numberOfNotes = static_cast<int>(Note::NUMBER_OF_NOTES);
+	note_ = static_cast<ambience::Note>(rand() % numberOfNotes);
+}
+
+void
+	Chromosome::print()
+{
+	std::cout << noteToString.at(note_) << " ";
+}
+
 }
