@@ -139,12 +139,17 @@ void Synth::printParameters(const std::string & name)
 			"\n  Oscillator " << i << ":"
 			"\n    - Misc:"
 			"\n      + Detune:   " << getDetune(i) <<
-			"\n    - Filter:"
-			"\n      + Cutoff:   " << getCutoff(i) << 
 			"\n      + Attack:   " << getAttack(i) <<
 			"\n      + Decay:    " << getDecay(i) <<
 			"\n      + Sustain:  " << getSustain(i) <<
 			"\n      + Release:  " << getRelease(i) <<
+			"\n    - Filter:"
+			"\n      + Cutoff:   " << getCutoff(i) <<
+			"\n      + Envelope: " << getFilterEnvelopeAmount(i) <<
+			"\n      + Attack:   " << getFilterAttack(i) <<
+			"\n      + Decay:    " << getFilterDecay(i) <<
+			"\n      + Sustain:  " << getFilterSustain(i) <<
+			"\n      + Release:  " << getFilterRelease(i) <<
 		std::endl;
 	}
 }
@@ -242,6 +247,70 @@ void Synth::setRelease(real release, int oscillatorId)
 	}
 }
 
+void Synth::setFilterAttack(real attack)
+{
+	for (unsigned i = 0; i < oscillatorsPerVoice; i++)
+	{
+		setFilterAttack(attack, i);
+	}
+}
+
+void Synth::setFilterAttack(real attack, int oscillatorId)
+{
+	for (unsigned i = 0; i < a_voices.size(); i++)
+	{
+		a_voices[i]->a_filter_envelopes[oscillatorId]->setAttack(attack);
+	}
+}
+
+void Synth::setFilterDecay(real decay)
+{
+	for (unsigned i = 0; i < oscillatorsPerVoice; i++)
+	{
+		setFilterDecay(decay, i);
+	}
+}
+
+void Synth::setFilterDecay(real decay, int oscillatorId)
+{
+	for (unsigned i = 0; i < a_voices.size(); i++)
+	{
+		a_voices[i]->a_filter_envelopes[oscillatorId]->setDecay(decay);
+	}
+}
+
+void Synth::setFilterSustain(real sustain)
+{
+	for (unsigned i = 0; i < oscillatorsPerVoice; i++)
+	{
+		setFilterSustain(sustain, i);
+	}
+}
+
+void Synth::setFilterSustain(real sustain, int oscillatorId)
+{
+	for (unsigned i = 0; i < a_voices.size(); i++)
+	{
+		a_voices[i]->a_filter_envelopes[oscillatorId]->setSustain(sustain);
+	}
+}
+
+void Synth::setFilterRelease(real release)
+{
+	for (unsigned i = 0; i < oscillatorsPerVoice; i++)
+	{
+		setFilterRelease(release, i);
+	}
+}
+
+void Synth::setFilterRelease(real release, int oscillatorId)
+{
+	for (unsigned i = 0; i < a_voices.size(); i++)
+	{
+		a_voices[i]->a_filter_envelopes[oscillatorId]->setRelease(release);
+	}
+}
+
 void Synth::setFilterEnvelopeAmount(real amount)
 {
 	for (unsigned i = 0; i < oscillatorsPerVoice; i++)
@@ -295,4 +364,24 @@ real Synth::getRelease(int oscillatorId)
 real Synth::getFilterEnvelopeAmount(int oscillatorId)
 {
 	return a_voices[0]->a_filter_envelope_amounts[oscillatorId];
+}
+
+real Synth::getFilterAttack(int oscillatorId)
+{
+	return a_voices[0]->a_filter_envelopes[oscillatorId]->getAttack();
+}
+
+real Synth::getFilterDecay(int oscillatorId)
+{
+	return a_voices[0]->a_filter_envelopes[oscillatorId]->getDecay();
+}
+
+real Synth::getFilterSustain(int oscillatorId)
+{
+	return a_voices[0]->a_filter_envelopes[oscillatorId]->getSustain();
+}
+
+real Synth::getFilterRelease(int oscillatorId)
+{
+	return a_voices[0]->a_filter_envelopes[oscillatorId]->getRelease();
 }

@@ -45,6 +45,18 @@ public:
 	void setRelease(real release);
 	void setRelease(real release, int oscillatorId);
 
+	void setFilterAttack(real attack);
+	void setFilterAttack(real attack, int oscillatorId);
+
+	void setFilterDecay(real decay);
+	void setFilterDecay(real decay, int oscillatorId);
+
+	void setFilterSustain(real sustain);
+	void setFilterSustain(real sustain, int oscillatorId);
+
+	void setFilterRelease(real release);
+	void setFilterRelease(real release, int oscillatorId);
+
 	void setFilterEnvelopeAmount(real amount);
 	void setFilterEnvelopeAmount(real amount, int oscillatorId);
 
@@ -58,6 +70,11 @@ public:
 	real getDecay(int oscillatorId);
 	real getSustain(int oscillatorId);
 	real getRelease(int oscillatorId);
+
+	real getFilterAttack(int oscillatorId);
+	real getFilterDecay(int oscillatorId);
+	real getFilterSustain(int oscillatorId);
+	real getFilterRelease(int oscillatorId);
 
 	real getFilterEnvelopeAmount(int oscillatorId);
 
