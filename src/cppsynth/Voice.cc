@@ -31,7 +31,9 @@ void Voice::reset()
 		a_volume_envelopes[i]->reset();
 		a_filters[i]->reset();
 		a_filter_envelopes[i]->reset();
+#if 0
 		a_filter_envelope_amounts[i] = 0.0;
+#endif
 	}
 }
 
@@ -122,7 +124,7 @@ real Voice::getSample()
 	{
 		real sample = a_oscillators[i]->getSample();
 
-		real filter_mod = a_filter_envelopes[i]->getSample() * this->a_filter_envelope_amounts[i] + this->filter_lfo_mod;
+		real filter_mod = a_filter_envelopes[i]->getSample() * a_filter_envelope_amounts[i] + filter_lfo_mod;
 		filter_mod = filter_mod >  1.0 ? 1.0 : filter_mod;
 		filter_mod = filter_mod < -1.0 ? -1.0 : filter_mod;
 		
