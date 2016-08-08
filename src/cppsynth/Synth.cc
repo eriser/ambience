@@ -138,6 +138,7 @@ void Synth::printParameters(const std::string & name)
 		std::cout <<
 			"\n  Oscillator " << i << ":"
 			"\n    - Misc:"
+			"\n      + Waveform: " << waveFormToString(getWaveform(i)) <<
 			"\n      + Detune:   " << getDetune(i) <<
 			"\n      + Attack:   " << getAttack(i) <<
 			"\n      + Decay:    " << getDecay(i) <<
@@ -174,13 +175,28 @@ void Synth::setCutoff(real frequency, int oscillatorId)
 	}
 }
 
+void Synth::setWaveform(waveform_type waveform)
+{
+	for (unsigned i = 0; i < oscillatorsPerVoice; i++)
+	{
+		setWaveform(waveform, i);
+	}
+}
+
+void Synth::setWaveform(waveform_type waveform, int oscillatorId)
+{
+	for (unsigned i = 0; i < a_voices.size(); i++)
+	{
+		a_voices[i]->a_oscillators[oscillatorId]->setWaveform(waveform);
+	}
+}
+
 void Synth::setDetune(real cents, int oscillatorId)
 {
 	for (unsigned i = 0; i < a_voices.size(); i++)
 	{
 		a_voices[i]->a_oscillators[oscillatorId]->setDetune(cents);
 	}
-
 }
 
 void Synth::setAttack(real attack)
@@ -334,6 +350,11 @@ void Synth::setFilterEnvelopeAmount(real amount, int oscillatorId)
 real Synth::getCutoff(int oscillatorId)
 {
 	return a_voices[0]->a_filters[oscillatorId]->getCutoff() * (samplerate / 2.0);
+}
+
+waveform_type Synth::getWaveform(int oscillatorId)
+{
+	return a_voices[0]->a_oscillators[oscillatorId]->getWaveform();
 }
 
 real Synth::getDetune(int oscillatorId)

@@ -5,10 +5,39 @@
 
 #include <cmath>
 #include <cstdlib>
+#include <string>
+
+std::string waveFormToString(waveform_type waveform)
+{
+	std::string waveformString;
+	switch (waveform)
+	{
+	case SINE:
+		waveformString = "Sine";
+		break;
+	case SAW:
+		waveformString = "Saw";
+		break;
+	case SQUARE:
+		waveformString = "Square";
+		break;
+	case TRIANGLE:
+		waveformString = "Triangle";
+		break;
+	case WHITE_NOISE:
+		waveformString = "White Noise";
+		break;
+	default:
+		waveformString = "Invalid";
+		break;
+	}
+
+	return waveformString;
+}
 
 Oscillator::Oscillator(int samplerate)
 {
-	waveform = SAW;
+	waveform_ = SAW;
 	phase = 0.0;
 	this->samplerate = samplerate;
 	last_output = 0.0;
@@ -45,7 +74,7 @@ real Oscillator::getSample()
 	real t = this->phase / two_pi;
 	real value = 0.0;
 
-	switch (this->waveform)
+	switch (this->waveform_)
 	{
 	case SINE:
 		value = sin(this->phase);

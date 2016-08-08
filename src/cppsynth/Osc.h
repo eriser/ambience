@@ -1,6 +1,8 @@
 #ifndef OSC_H
 #define OSC_H
 
+#include <string>
+
 #include "Types.h"
 
 typedef enum
@@ -12,6 +14,8 @@ typedef enum
 	WHITE_NOISE
 } waveform_type;
 
+std::string waveFormToString(waveform_type waveform);
+
 class Oscillator
 {
 public:
@@ -20,8 +24,10 @@ public:
 
 	void setFrequency(real frequency);
 	void setDetune(real detune);
+	void setWaveform(waveform_type waveform) { this->waveform_ = waveform; };
 
 	real getDetune() { return detune_;  }
+	waveform_type getWaveform() { return waveform_; }
 
 	real getSample();
 	void reset();
@@ -32,7 +38,7 @@ private:
 	void update_increment();
 	real poly_blep(real t);
 
-	waveform_type   waveform;
+	waveform_type   waveform_;
 	real            frequency_;
     real            dryFrequency_;
 	real            phase;

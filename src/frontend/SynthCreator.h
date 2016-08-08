@@ -14,19 +14,27 @@ toChordSynth(StereoSynth & synth, bool punchy = true)
 	// synth.left.reset();
 	// synth.right.reset();
 
-	real attack = punchy ? util::randomRealInterval(0.1, 0.6) : util::randomRealInterval(1.0, 2.0);
+	waveform_type waveform = TRIANGLE;
+
+	real attack = punchy ? util::randomRealInterval(0.0001, 0.1) : util::randomRealInterval(1.0, 2.0);
 	real decay = punchy ? util::randomRealInterval(0.1, 0.6) : util::randomRealInterval(1.0, 2.0);
 	real sustain = 0.7;
 	real release = util::randomRealInterval(5.0, 8.0);
 
-	real cutoff = util::randomRealInterval(500.0, 1500.0);
+	real cutoff = util::randomRealInterval(500.0, 1200.0);
 
 	int detuneOffset = util::randomIntInterval(0, 5);
 
-	real filterEnvelopeAmount = punchy ? util::randomRealInterval(0.8, 0.9) : 0.0;
+	real filterEnvelopeAmount = punchy ? util::randomRealInterval(0.1, 0.3) : 0.0;
 
+	real filterAttack = attack * 0.5;
+	real filterDecay = decay * 0.5;
+	real filterSustain = util::randomRealInterval(0.1, 0.5);
+	real filterRelease = release;
 
 	// left
+
+	synth.left.setWaveform(waveform);
 
 	synth.left.setAttack(attack);
 	synth.left.setDecay(decay);
@@ -42,7 +50,14 @@ toChordSynth(StereoSynth & synth, bool punchy = true)
 
 	synth.left.setFilterEnvelopeAmount(filterEnvelopeAmount);
 
+	synth.left.setFilterAttack(filterAttack);
+	synth.left.setFilterDecay(filterDecay);
+	synth.left.setFilterSustain(filterSustain);
+	synth.left.setFilterRelease(filterRelease);
+
 	// right
+
+	synth.right.setWaveform(waveform);
 
 	synth.right.setAttack(attack);
 	synth.right.setDecay(decay);
@@ -58,6 +73,10 @@ toChordSynth(StereoSynth & synth, bool punchy = true)
 
 	synth.right.setFilterEnvelopeAmount(filterEnvelopeAmount);
 
+	synth.right.setFilterAttack(filterAttack);
+	synth.right.setFilterDecay(filterDecay);
+	synth.right.setFilterSustain(filterSustain);
+	synth.right.setFilterRelease(filterRelease);
 }
 
 StereoSynth

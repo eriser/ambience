@@ -31,6 +31,9 @@ public:
     void setCutoff(real frequency);
 	void setCutoff(real frequency, int oscillatorId);
 
+	void setWaveform(waveform_type waveform);
+	void setWaveform(waveform_type waveform, int oscillatorId);
+
     void setDetune(real cents, int oscillatorId);
 
 	void setAttack(real attack);
@@ -63,6 +66,8 @@ public:
 	// getters
 
 	real getCutoff(int oscillatorId);
+
+	waveform_type getWaveform(int oscillatorId);
 
 	real getDetune(int oscillatorId);
 
