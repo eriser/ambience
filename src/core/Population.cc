@@ -11,11 +11,12 @@ namespace ambience
 
 Population::Population() {}
     
-Population::Population( int populationSize, int individualSize )
+Population::Population( int populationSize, unsigned numberOfSlices, unsigned sliceLength ) :
+	numberOfSlices_( numberOfSlices ), sliceLength_( sliceLength )
 {
     for ( int i = 0; i < populationSize; i++ )
     {
-        Individual individual( individualSize );
+        Individual individual( numberOfSlices, sliceLength );
         individuals_.push_back( individual );
     }
 }

@@ -13,9 +13,7 @@ class Individual
 {
 public:
 
-    Individual();
-
-    Individual( int length );
+    Individual( unsigned numberOfSlices, unsigned sliceLength );
 
     Chromosome &
     operator[]( int i );
@@ -40,27 +38,26 @@ public:
 	evaluate(std::vector< Evaluator * > & evaluators, bool verbose = false);
 
 	std::vector< Chromosome >
-	slice(unsigned index, unsigned sliceLength);
+	slice(unsigned index);
 
 	unsigned
-	numberOfSlices(unsigned sliceLength) const;
+	numberOfSlices() const;
 
 	Chromosome
-	operator()( unsigned slice, unsigned note, unsigned sliceLength ) const;
+	operator()( unsigned slice, unsigned note) const;
 
 	unsigned
 	count(Note note) const;
 
 	unsigned
-	count(Note note, unsigned slice, unsigned sliceLength) const;
+	count(Note note, unsigned slice) const;
 
     void
     print();
 
-	void
-	print(unsigned sliceLength);
-
 private:
+	unsigned numberOfSlices_;
+	unsigned sliceLength_;
     std::vector< Chromosome > chromosomes_;
 	float fitness_;
 };

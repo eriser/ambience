@@ -66,10 +66,10 @@ public:
 	virtual float evaluate(const ambience::Individual & individual)
 	{
 		float fitness = 0;
-		unsigned numberOfSlices = individual.numberOfSlices(sliceLength_);
+		unsigned numberOfSlices = individual.numberOfSlices();
 		for (unsigned slice = 0; slice < numberOfSlices; slice++)
 		{
-			unsigned numberOfRealNotes = individual.count(ambience::Note::ON, slice, sliceLength_);
+			unsigned numberOfRealNotes = individual.count(ambience::Note::ON, slice);
 
 			if (numberOfRealNotes == 1)
 			{
@@ -168,11 +168,11 @@ public:
 	   unsigned notesInRange = 0;
 	   unsigned numberOfNotes = individual.count(ambience::Note::ON);
 
-       for ( unsigned slice = 0; slice < individual.numberOfSlices( sliceLength_ ); slice++ )
+       for ( unsigned slice = 0; slice < individual.numberOfSlices(); slice++ )
        {
           for ( unsigned note = minNote_; note <= maxNote_; note++ )
           {
-             if ( individual( slice, note, sliceLength_ ).note() == ambience::Note::ON )   
+             if ( individual( slice, note ).note() == ambience::Note::ON )   
              {
                 notesInRange++;
              }
@@ -261,12 +261,12 @@ public:
 	{
 		float fitness = 0.0f;
 		unsigned numberOfNoteSlices = 0;
-		unsigned numberOfSlices = individual.numberOfSlices(sliceLength_);
+		unsigned numberOfSlices = individual.numberOfSlices();
 		for (unsigned slice = 0; slice < numberOfSlices; slice++)
 		{
 			if (noteSlices_.find(slice) == noteSlices_.end())
 			{
-				unsigned numNotesInSlice = individual.count(ambience::Note::ON, slice, sliceLength_);
+				unsigned numNotesInSlice = individual.count(ambience::Note::ON, slice);
 				fitness += (float)numNotesInSlice / (float)sliceLength_;
 				numberOfNoteSlices++;
 			}

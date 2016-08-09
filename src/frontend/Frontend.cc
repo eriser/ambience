@@ -27,7 +27,7 @@ extern "C"
 
 std::vector<real>
 individualToAudio(
-	ambience::Individual &	  individual,
+	std::vector<ambience::Individual> &	  individuals,
 	Synth &                   synth,
 	std::vector< Effect * > & fx,
 	float                     bpm,
@@ -47,36 +47,39 @@ individualToAudio(
 
 	unsigned long currentSample = 0;
 
-	for (unsigned slice = 0; slice < numberOfSlices; slice++)
+	for (unsigned individualIdx = 0; individualIdx < individuals.size(); individualIdx++)
 	{
-		for (unsigned note = 0; note < sliceLength; note++)
+		for (unsigned slice = 0; slice < numberOfSlices; slice++)
 		{
-			ambience::Note currentNote = individual(slice, note, sliceLength).note();
-			switch (currentNote)
+			for (unsigned note = 0; note < sliceLength; note++)
 			{
-			case ambience::Note::ON:
-				synth.noteOn(note);
-				break;
-			case ambience::Note::REST:
-				synth.noteOff(note);
-				break;
-			default:
-				break;
+				ambience::Note currentNote = individuals[individualIdx](slice, note).note();
+				switch (currentNote)
+				{
+				case ambience::Note::ON:
+					synth.noteOn(note);
+					break;
+				case ambience::Note::REST:
+					synth.noteOff(note);
+					break;
+				default:
+					break;
+				}
 			}
-		}
 
-		for (unsigned long sample = 0; sample < numberOfSamplesPerSlice; sample++)
-		{
-			real audioSample = synth.getSample();
-			for (Effect * effect : fx)
+			for (unsigned long sample = 0; sample < numberOfSamplesPerSlice; sample++)
 			{
-				audioSample = effect->getSample(audioSample);
+				real audioSample = synth.getSample();
+				for (Effect * effect : fx)
+				{
+					audioSample = effect->getSample(audioSample);
+				}
+				audio[currentSample + sample] = audioSample;
+
 			}
-			audio[currentSample + sample] = audioSample;
 
+			currentSample += numberOfSamplesPerSlice;
 		}
-
-		currentSample += numberOfSamplesPerSlice;
 	}
 
 	return audio;
@@ -141,6 +144,9 @@ main()
 
 	std::set<unsigned> set = { 0, 4, 8, 12, 16, 20 };
     Individual chords = createChords( sliceLength, numberOfSlices, numberOfSlices, CPentatonic, set );
+	std::vector<Individual> individuals;
+	individuals.push_back(chords);
+	individuals.push_back(chords);
     // Individual melody = createMelody( sliceLength, numberOfSlices, numberOfSlices, CPentatonic );
 
 #if 1
@@ -159,12 +165,12 @@ main()
 	Delay delay(0.5f, 500, 0.5, true, 5000, samplerate);
 	std::vector< Effect * > fx;
 	fx.push_back( &delay );
-	std::vector<real> audioLeft = individualToAudio(chords, synth.left, fx, 120, slicesPerWholeNote, numberOfSlices, sliceLength);
+	std::vector<real> audioLeft = individualToAudio(individuals, synth.left, fx, 120, slicesPerWholeNote, numberOfSlices, sliceLength);
 
 	Delay delay2(0.5f, 500, 0.5, true, 5000, samplerate);
 	std::vector< Effect * > fx2;
 	fx2.push_back(&delay2);
-	std::vector<real> audioRight = individualToAudio(chords, synth.right, fx2, 120, slicesPerWholeNote, numberOfSlices, sliceLength);
+	std::vector<real> audioRight = individualToAudio(individuals, synth.right, fx2, 120, slicesPerWholeNote, numberOfSlices, sliceLength);
 
 
 	std::vector<real> audioAll = interleave( audioLeft, audioRight );

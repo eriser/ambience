@@ -15,7 +15,7 @@ createMelody( unsigned sliceLength, unsigned numberOfSlices, unsigned numberOfNo
 	unsigned individualSize = sliceLength * numberOfSlices;
 	bool verbose = true;
 
-    GeneticAlgorithmRunner gar( populationSize, individualSize );
+    GeneticAlgorithmRunner gar( populationSize, numberOfSlices, sliceLength );
 
 	NumberOfNotesEvaluator numberOfNotesEvaluator(numberOfNotes);
 	gar.registerEvaluator(numberOfNotesEvaluator);
@@ -53,7 +53,7 @@ createChords( unsigned sliceLength, unsigned numberOfSlices, unsigned numberOfNo
 	unsigned individualSize = sliceLength * numberOfSlices;
 	bool verbose = true;
 
-    GeneticAlgorithmRunner gar( populationSize, individualSize );
+    GeneticAlgorithmRunner gar( populationSize, numberOfSlices, sliceLength );
 
 	NumberOfNotesEvaluator numberOfNotesEvaluator(6*5);
 	gar.registerEvaluator(numberOfNotesEvaluator);

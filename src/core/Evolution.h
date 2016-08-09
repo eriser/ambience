@@ -14,8 +14,8 @@ class GeneticAlgorithmRunner
 {
 public:
 
-    GeneticAlgorithmRunner( int populationSize, int individualSize ) :
-        population_( populationSize, individualSize )
+    GeneticAlgorithmRunner( int populationSize, unsigned numberOfSlices, unsigned sliceLength ) :
+        population_( populationSize, numberOfSlices, sliceLength )
     {}
     
     void

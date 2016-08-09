@@ -16,7 +16,7 @@ public:
 
     Population();
         
-    Population( int populationSize, int individualSize );
+    Population( int populationSize, unsigned numberOfSlices, unsigned sliceLength );
 
     void
     add( Individual & individual );
@@ -41,7 +41,10 @@ public:
 
 private:
 
+	unsigned numberOfSlices_;
+	unsigned sliceLength_;
     std::vector< Individual > individuals_;
+
 };
 
 }

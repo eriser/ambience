@@ -9,12 +9,10 @@
 namespace ambience
 {
 
-Individual::Individual()
-{}
-
-Individual::Individual( int length )
+Individual::Individual( unsigned numberOfSlices, unsigned sliceLength ) :
+	numberOfSlices_( numberOfSlices ), sliceLength_( sliceLength )
 {
-    for ( int i = 0; i < length; i++ )
+    for ( unsigned i = 0; i < numberOfSlices_ * sliceLength_; i++ )
     {
         Chromosome chromosome;
         chromosomes_.push_back( chromosome );
@@ -90,23 +88,23 @@ Individual::evaluate(std::vector< Evaluator * > & evaluators, bool verbose )
 }
 
 std::vector< Chromosome >
-Individual::slice(unsigned index, unsigned sliceLength)
+Individual::slice(unsigned index)
 {
     return std::vector< Chromosome > (
-        chromosomes_.begin() +  index      * sliceLength,
-        chromosomes_.begin() + (index + 1) * sliceLength);
+        chromosomes_.begin() +  index      * sliceLength_,
+        chromosomes_.begin() + (index + 1) * sliceLength_);
 }
 
 unsigned
-Individual::numberOfSlices(unsigned sliceLength) const
+Individual::numberOfSlices() const
 {
-    return size() / sliceLength;
+    return numberOfSlices_;
 }
 
 Chromosome
-Individual::operator()( unsigned slice, unsigned note, unsigned sliceLength ) const
+Individual::operator()( unsigned slice, unsigned note) const
 {
-    return chromosomes_[slice * sliceLength + note];
+    return chromosomes_[slice * sliceLength_ + note];
 }
 
 unsigned
@@ -124,12 +122,12 @@ Individual::count(Note note) const
 }
 
 unsigned
-Individual::count(Note note, unsigned slice, unsigned sliceLength) const
+Individual::count(Note note, unsigned slice) const
 {
     unsigned cnt = 0;
-    for (unsigned i = 0; i < sliceLength; i++)
+    for (unsigned i = 0; i < sliceLength_; i++)
     {
-        if (operator()(slice, i, sliceLength).note() == note)
+        if (operator()(slice, i).note() == note)
         {
             cnt++;
         }
@@ -140,21 +138,11 @@ Individual::count(Note note, unsigned slice, unsigned sliceLength) const
 void
 Individual::print()
 {
-    for ( Chromosome & chromosome : chromosomes_ )
+    for (unsigned slice = 0; slice < numberOfSlices(); slice++)
     {
-        chromosome.print();
-    }
-    std::cout << std::endl;
-}
-
-void
-Individual::print(unsigned sliceLength)
-{
-    for (unsigned slice = 0; slice < numberOfSlices(sliceLength); slice++)
-    {
-        for (unsigned note = 0; note < sliceLength; note++)
+        for (unsigned note = 0; note < sliceLength_; note++)
         {
-            operator()(slice, note, sliceLength).print();
+            operator()(slice, note).print();
         }
         std::cout << std::endl;
     }
