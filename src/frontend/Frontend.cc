@@ -31,11 +31,15 @@ individualToAudio(
 	Synth &                   synth,
 	std::vector< Effect * > & fx,
 	float                     bpm,
-	unsigned                  slicesPerWholeNote,
-	unsigned                  numberOfSlices,
-	unsigned                  sliceLength
+	unsigned                  slicesPerWholeNote
 	)
 {
+	unsigned numberOfSlices = 0;
+	for (unsigned i = 0; i < individuals.size(); i++)
+	{
+		numberOfSlices += individuals[i].numberOfSlices();
+	}
+
 	unsigned numberOfQuarters  = (unsigned)((float)numberOfSlices / ((float)slicesPerWholeNote / 4.0f));
 	float    quartersPerSecond = bpm / 60.0f;
 	unsigned samplerate        = (unsigned) synth.getSampleRate();
@@ -49,9 +53,9 @@ individualToAudio(
 
 	for (unsigned individualIdx = 0; individualIdx < individuals.size(); individualIdx++)
 	{
-		for (unsigned slice = 0; slice < numberOfSlices; slice++)
+		for (unsigned slice = 0; slice < individuals[individualIdx].numberOfSlices(); slice++)
 		{
-			for (unsigned note = 0; note < sliceLength; note++)
+			for (unsigned note = 0; note < individuals[individualIdx].sliceLength(); note++)
 			{
 				ambience::Note currentNote = individuals[individualIdx](slice, note).note();
 				switch (currentNote)
@@ -147,6 +151,8 @@ main()
 	std::vector<Individual> individuals;
 	individuals.push_back(chords);
 	individuals.push_back(chords);
+	individuals.push_back(chords);
+	individuals.push_back(chords);
     // Individual melody = createMelody( sliceLength, numberOfSlices, numberOfSlices, CPentatonic );
 
 #if 1
@@ -165,12 +171,12 @@ main()
 	Delay delay(0.5f, 500, 0.5, true, 5000, samplerate);
 	std::vector< Effect * > fx;
 	fx.push_back( &delay );
-	std::vector<real> audioLeft = individualToAudio(individuals, synth.left, fx, 120, slicesPerWholeNote, numberOfSlices, sliceLength);
+	std::vector<real> audioLeft = individualToAudio(individuals, synth.left, fx, 120, slicesPerWholeNote);
 
 	Delay delay2(0.5f, 500, 0.5, true, 5000, samplerate);
 	std::vector< Effect * > fx2;
 	fx2.push_back(&delay2);
-	std::vector<real> audioRight = individualToAudio(individuals, synth.right, fx2, 120, slicesPerWholeNote, numberOfSlices, sliceLength);
+	std::vector<real> audioRight = individualToAudio(individuals, synth.right, fx2, 120, slicesPerWholeNote);
 
 
 	std::vector<real> audioAll = interleave( audioLeft, audioRight );
