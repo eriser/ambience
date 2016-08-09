@@ -43,6 +43,9 @@ public:
 	unsigned
 	numberOfSlices() const;
 
+	unsigned
+	sliceLength() const { return sliceLength_; }
+
 	Chromosome
 	operator()( unsigned slice, unsigned note) const;
 
