@@ -16,9 +16,9 @@ toChordSynth(StereoSynth & synth, bool punchy = true)
 
 	waveform_type waveform = TRIANGLE;
 
-	real attack = punchy ? util::randomRealInterval(0.0001, 0.1) : util::randomRealInterval(1.0, 2.0);
+	real attack = punchy ? util::randomRealInterval(0.0001, 0.1) : util::randomRealInterval(0.3, 1.0);
 	real decay = punchy ? util::randomRealInterval(0.1, 0.6) : util::randomRealInterval(1.0, 2.0);
-	real sustain = 0.7;
+	real sustain = punchy ? 0.7 : 1.0;
 	real release = util::randomRealInterval(5.0, 8.0);
 
 	real cutoff = util::randomRealInterval(500.0, 1200.0);

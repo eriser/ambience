@@ -55,7 +55,7 @@ createChords( unsigned sliceLength, unsigned numberOfSlices, unsigned numberOfNo
 
     GeneticAlgorithmRunner gar( populationSize, numberOfSlices, sliceLength );
 
-	NumberOfNotesEvaluator numberOfNotesEvaluator(6*5);
+	NumberOfNotesEvaluator numberOfNotesEvaluator(noteSet.size() * 4);
 	gar.registerEvaluator(numberOfNotesEvaluator);
 
     NotesInRangeEvaluator notesInRangeEvaluator(50, 70, sliceLength);
