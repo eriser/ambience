@@ -12,7 +12,6 @@ createMelody( unsigned sliceLength, unsigned numberOfSlices, unsigned numberOfNo
     using namespace ambience;
 
 	unsigned populationSize = 30;
-	unsigned individualSize = sliceLength * numberOfSlices;
 	bool verbose = true;
 
     GeneticAlgorithmRunner gar( populationSize, numberOfSlices, sliceLength );
@@ -50,12 +49,11 @@ createChords( unsigned sliceLength, unsigned numberOfSlices, unsigned numberOfNo
     using namespace ambience;
 
 	unsigned populationSize = 30;
-	unsigned individualSize = sliceLength * numberOfSlices;
 	bool verbose = true;
 
     GeneticAlgorithmRunner gar( populationSize, numberOfSlices, sliceLength );
 
-	NumberOfNotesEvaluator numberOfNotesEvaluator(noteSet.size() * 4);
+	NumberOfNotesEvaluator numberOfNotesEvaluator(noteSet.size() * 8);	
 	gar.registerEvaluator(numberOfNotesEvaluator);
 
     NotesInRangeEvaluator notesInRangeEvaluator(50, 70, sliceLength);

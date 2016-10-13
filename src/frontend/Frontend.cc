@@ -119,24 +119,9 @@ main()
 		ambience::NoteValue::A,
 	};
 
-#if 0
-    Chromosome c;
-    c.print();
-    std::cout << "Number of rests: " << c.count(Note::REST) << std::endl;
-
-    Individual i(4);
-    i.print();
-    std::cout << std::endl;
-    i.mutate();
-    i.print();
-    std::cout << std::endl;
-    i.mutate();
-    i.print();
-
-
-    Population p( 5, 2 );
-    // p.print();
-#endif
+	// Defining some input values
+	float songLengthSeconds = 60.0f;
+	unsigned seed 			= 0;
 
 #if 1
     
@@ -146,7 +131,7 @@ main()
 	// unsigned individualSize = sliceLength * numberOfSlices;
 	// bool verbose = true;
 
-	std::set<unsigned> set = { 0, 4, 8, 12, 16, 20 };
+	std::set<unsigned> set = { 0, 4, 8, 12, 16, 20, 24, 28 };
     Individual chords = createChords( sliceLength, numberOfSlices, numberOfSlices, CPentatonic, set );
 	std::vector<Individual> individuals;
 	individuals.push_back(chords);
@@ -204,34 +189,5 @@ main()
 #endif
     
 
-#if 0
-   int numSamples = 88200;
-
-   SynthWrapper synth( 44100 );
-
-   real audio[numSamples];
-   memset ( audio, 0, numSamples * sizeof(real) );
-
-   synth_parameter_union value;
-
-   synth.noteOn( 69 );
-   value.real_value = .1;
-   synth.setParameter( OSC_ALL_CUTOFF, value );
-
-   for ( int i = 0; i < numSamples; i++ )
-   {
-      audio[i] = synth.getSample();
-   }
-   synth.noteOff( 69 );
-
-   writeWav(
-         "/tmp/test.wav",
-         &audio[0],
-         numSamples,
-         1,
-         44100,
-         16
-   );
-#endif
    return 0;
 }
